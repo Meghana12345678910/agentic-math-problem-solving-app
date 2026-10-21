@@ -512,168 +512,168 @@ src/types/
 ## Phase 9: Local Data Storage
 ### 35. Create the Storage Service
 
-- [ ] Create a wrapper around localStorage.
+- [x] Create a wrapper around localStorage.
 
-- [ ] Add functions for reading data.
+- [x] Add functions for reading data.
 
-- [ ] Add functions for writing data.
+- [x] Add functions for writing data.
 
-- [ ] Add JSON parsing error handling.
+- [x] Add JSON parsing error handling.
 
-- [ ] Add validation for loaded data.
+- [x] Add validation for loaded data.
 
-- [ ] Handle unavailable browser storage.
+- [x] Handle unavailable browser storage.
 
-- [ ] Handle storage-capacity errors.
+- [x] Handle storage-capacity errors.
 
 ### 36. Add Data Schema Versioning
 
-- [ ] Store a data-schema version.
+- [x] Store a data-schema version.
 
-- [ ] Detect missing or older versions.
+- [x] Detect missing or older versions.
 
-- [ ] Create an initial migration structure.
+- [x] Create an initial migration structure.
 
-- [ ] Avoid deleting unrelated stored data.
+- [x] Avoid deleting unrelated stored data.
 
 ### 37. Persist Application Settings
 
-- [ ] Save selected settings.
+- [x] Save selected settings.
 
-- [ ] Load settings when the application starts.
+- [x] Load settings when the application starts.
 
-- [ ] Use defaults when no settings exist.
+- [x] Use defaults when no settings exist.
 
-- [ ] Recover from invalid stored settings.
+- [x] Recover from invalid stored settings.
 
 ### 38. Persist Practice Sessions
 
-- [ ] Save session information.
+- [x] Save session information.
 
-- [ ] Save session completion details.
+- [x] Save session completion details.
 
-- [ ] Load recent sessions.
+- [x] Load recent sessions.
 
-- [ ] Limit or summarize old session records when necessary.
+- [x] Limit or summarize old session records when necessary.
 
 ### 39. Persist Practice Attempts
 
-- [ ] Save every completed attempt.
+- [x] Save every completed attempt.
 
-- [ ] Include the selected answer.
+- [x] Include the selected answer.
 
-- [ ] Include the self-reported result.
+- [x] Include the self-reported result.
 
-- [ ] Include the operation and difficulty.
+- [x] Include the operation and difficulty.
 
-- [ ] Include the session ID and timestamp.
+- [x] Include the session ID and timestamp.
 
 - [ ] Confirm that attempts persist after a browser restart.
 
 ## Phase 10: Statistics
 ### 40. Implement Statistics Calculations
 
-- [ ] Calculate total attempted questions.
+- [x] Calculate total attempted questions.
 
-- [ ] Calculate total correct answers.
+- [x] Calculate total correct answers.
 
-- [ ] Calculate total incorrect answers.
+- [x] Calculate total incorrect answers.
 
-- [ ] Calculate overall accuracy.
+- [x] Calculate overall accuracy.
 
-- [ ] Handle zero attempts without dividing by zero.
+- [x] Handle zero attempts without dividing by zero.
 
-- [ ] Add unit tests for calculations.
+- [x] Add unit tests for calculations.
 
 ### 41. Track Statistics by Operation
 
-- [ ] Track addition attempts.
+- [x] Track addition attempts.
 
-- [ ] Track subtraction attempts.
+- [x] Track subtraction attempts.
 
-- [ ] Track multiplication attempts.
+- [x] Track multiplication attempts.
 
-- [ ] Track division attempts.
+- [x] Track division attempts.
 
-- [ ] Calculate accuracy for each operation.
+- [x] Calculate accuracy for each operation.
 
 ### 42. Track Statistics by Difficulty
 
-- [ ] Track Level 1 performance.
+- [x] Track Level 1 performance.
 
-- [ ] Track Level 2 performance.
+- [x] Track Level 2 performance.
 
-- [ ] Track Level 3 performance.
+- [x] Track Level 3 performance.
 
-- [ ] Track Level 4 performance.
+- [x] Track Level 4 performance.
 
-- [ ] Calculate accuracy for each level.
+- [x] Calculate accuracy for each level.
 
 ### 43. Create the Statistics Overview
 
-- [ ] Display total attempted questions.
+- [x] Display total attempted questions.
 
-- [ ] Display total correct answers.
+- [x] Display total correct answers.
 
-- [ ] Display total incorrect answers.
+- [x] Display total incorrect answers.
 
-- [ ] Display overall accuracy.
+- [x] Display overall accuracy.
 
-- [ ] Add an empty state for new users.
+- [x] Add an empty state for new users.
 
 ### 44. Display Statistics by Operation
 
-- [ ] Create one statistics card per operation.
+- [x] Create one statistics card per operation.
 
-- [ ] Display attempted, correct, and incorrect totals.
+- [x] Display attempted, correct, and incorrect totals.
 
-- [ ] Display accuracy.
+- [x] Display accuracy.
 
-- [ ] Make the layout responsive.
+- [x] Make the layout responsive.
 
 ### 45. Display Statistics by Difficulty
 
-- [ ] Create one statistics card per difficulty level.
+- [x] Create one statistics card per difficulty level.
 
-- [ ] Display attempted, correct, and incorrect totals.
+- [x] Display attempted, correct, and incorrect totals.
 
-- [ ] Display accuracy.
+- [x] Display accuracy.
 
-- [ ] Clearly label each level.
+- [x] Clearly label each level.
 
 ### 46. Display Recent Sessions
 
-- [ ] List recent session dates.
+- [x] List recent session dates.
 
-- [ ] Display operations practiced.
+- [x] Display operations practiced.
 
-- [ ] Display difficulty.
+- [x] Display difficulty.
 
-- [ ] Display attempted, correct, and incorrect totals.
+- [x] Display attempted, correct, and incorrect totals.
 
-- [ ] Display session accuracy.
+- [x] Display session accuracy.
 
-- [ ] Sort sessions from newest to oldest.
+- [x] Sort sessions from newest to oldest.
 
-- [ ] Add an empty state when no sessions exist.
+- [x] Add an empty state when no sessions exist.
 
 ### 47. Add Statistics Reset
 
-- [ ] Add a Reset Statistics button.
+- [x] Add a Reset Statistics button.
 
-- [ ] Create a confirmation dialog.
+- [x] Create a confirmation dialog.
 
-- [ ] Require explicit confirmation.
+- [x] Require explicit confirmation.
 
-- [ ] Clear attempts.
+- [x] Clear attempts.
 
-- [ ] Clear sessions.
+- [x] Clear sessions.
 
-- [ ] Clear aggregate statistics.
+- [x] Clear aggregate statistics.
 
-- [ ] Decide whether settings should remain unchanged.
+- [x] Decide whether settings should remain unchanged.
 
-- [ ] Refresh the statistics page after deletion.
+- [x] Refresh the statistics page after deletion.
 
 ## Phase 11: Settings
 ### 48. Create the Settings Page

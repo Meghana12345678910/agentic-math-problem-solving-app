@@ -1,0 +1,55 @@
+.statistics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: 1rem;
+  margin: 1rem 0 2rem;
+}
+.statistics-card {
+  min-width: 0;
+  background: #fff;
+  border: 2px solid #dbe4f4;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+.statistics-card h3 {
+  margin-top: 0;
+}
+.statistics-card dl {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.4rem 1rem;
+  margin-bottom: 0;
+}
+.statistics-card dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.recent-sessions {
+  list-style: none;
+  padding: 0;
+}
+.recent-sessions .statistics-card dl {
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+.recent-sessions dd {
+  margin-bottom: 0.75rem;
+}
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  background: #15243bc9;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  overflow-y: auto;
+}
+.confirm-dialog {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  width: min(100%, 32rem);
+  max-height: 90vh;
+  overflow-y: auto;
+}

@@ -66,7 +66,7 @@ Start from `/practice/setup`. A valid configuration starts generated cards with 
 
 Fixed sessions show accessible progress and stop at the selected count, then navigating to the session summary. Continuous practice has no fixed progress bar; End Session asks for confirmation and then opens the session summary. Direct session URLs without valid setup redirect to setup. The sample-card preview is still available at `/practice/card-preview`.
 
-Attempts are not persisted yet. Completed sessions now include a timestamp and a dedicated summary page (Phase 8); storage remains Phase 9. The optional between-question transition is not implemented.
+Phase 9 persists completed attempts and session snapshots locally. Completed sessions now include a timestamp and a dedicated summary page (Phase 8); storage remains Phase 9. The optional between-question transition is not implemented.
 
 ## Session summary (Phase 8)
 
@@ -74,4 +74,20 @@ Completed fixed-length sessions and confirmed continuous-session endings navigat
 
 Practice Again starts a fresh session with the same configuration. Change Settings opens practice setup; View Statistics and Return Home open their existing routes. Practice Mistakes is disabled with an explanation until mistake review is implemented. Opening the summary without completed-session data displays a friendly empty state.
 
-Summary data and completion timestamps stay in memory and browser navigation state; no localStorage service or persistence was added.
+Summary navigation uses browser navigation state. Phase 9 also persists session records and completion timestamps to localStorage; active-session recovery remains later work.
+
+## Local storage (Phase 9)
+
+The storage service uses `mathPractice.version`, `mathPractice.settings`, `mathPractice.sessions`, and `mathPractice.attempts`. Schema version 1 migrates the earlier unversioned/version-0 format without removing records. Newer schema versions are protected from writes. Unrelated keys are never cleared.
+
+The existing card-animation preference is saved and restored. Other application settings have validated defaults and storage APIs; their Settings page controls remain later work. Sessions are upserted by ID, sorted newest first, and limited to 100 records. All completed attempts are retained, including selected answers, self-reports, operations, difficulty, session IDs, and timestamps. Duplicate session/question attempts are not appended twice. The service can load recent sessions; their statistics UI remains Phase 10.
+
+Malformed data falls back to defaults for its category. Blocked storage or quota failures show a friendly warning and retain new records in memory so practice can continue. This fallback cannot survive a closed page. A fresh service-instance test verifies serialized persistence; an actual close-and-reopen browser check remains unchecked in TODO.md until manually verified. Active-session resume and recovery are not implemented here.
+
+## Statistics (Phase 10)
+
+Open `/statistics` to view totals derived from saved self-reported attempts. Overall performance and cards for all four operations and difficulty levels show attempted, correct, incorrect, and accuracy. Accuracy is rounded to the nearest whole percent; no attempts shows 0%. Recent session cards show saved session dates, operations, difficulty, counts, and accuracy, newest first. Incomplete sessions are labeled. Counts across all attempts remain available even after older session summaries exceed the 100-session retention limit.
+
+Reset Statistics opens a confirmation dialog. Cancel or Escape preserves history; confirming clears attempts, sessions, and aggregate statistics and refreshes the page totals immediately. Settings, mistake patterns, schema version, and unrelated localStorage keys are preserved. If the reset cannot be persisted, the page states that it was only applied locally; saved history may reappear after reload. Statistics are derived from attempts instead of maintaining a separate aggregate cache.
+
+The Settings page and its additional controls remain Phase 11 work. Advanced mistake statistics remain later work.

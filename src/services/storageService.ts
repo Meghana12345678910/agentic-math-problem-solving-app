@@ -1,3 +1,4 @@
+import { calculateStatistics } from './statisticsService'
 import type { AppSettings } from '../types/settings'
 import type { PracticeAttempt, PracticeSession } from '../types/session'
 import { isPracticeConfiguration } from '../utils/practiceConfiguration'
@@ -229,7 +230,16 @@ export function createStorageService(
       return true
     return write('attempts', [...attempts, attempt])
   }
+  function resetStatistics() {
+    const results = [
+      write('attempts', []),
+      write('sessions', []),
+      write('statistics', calculateStatistics([])),
+    ]
+    return results.every(Boolean)
+  }
   return {
+    resetStatistics,
     initialize,
     loadSettings,
     saveSettings,
