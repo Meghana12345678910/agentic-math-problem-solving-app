@@ -6,6 +6,7 @@ import type {
 import { randomInteger } from '../utils/math.ts'
 import type { RandomSource } from '../utils/math.ts'
 import { generateAnswerChoices } from './answerChoices.ts'
+import { recoverQuestion } from './questionRecovery'
 import { createId } from '../utils/ids.ts'
 
 const operations: MathOperation[] = [
@@ -22,7 +23,6 @@ const symbols: Record<MathOperation, string> = {
 }
 const operandMaximum = { 1: 10, 2: 50, 3: 100, 4: 1000 }
 const divisorMaximum = { 1: 5, 2: 10, 3: 12, 4: 99 }
-const maximumAttempts = 3
 
 export function calculateAnswer(
   operation: MathOperation,
@@ -165,8 +165,13 @@ export function createQuestion(
     source: 'regular',
   }
 }
-export function isValidQuestion(question: Question): boolean {
+export function isValidQuestion(value: unknown): value is Question {
+  if (typeof value !== 'object' || value === null) return false
+  const question = value as Question
   if (
+    typeof question.id !== 'string' ||
+    question.id.length === 0 ||
+    !Array.isArray(question.choices) ||
     !operations.includes(question.operation) ||
     ![1, 2, 3, 4].includes(question.difficulty)
   )
@@ -216,27 +221,18 @@ export function generateQuestion(
       'Choose supported operations and a difficulty from 1 to 4.',
     )
   }
-  let lastError: unknown
-  for (let attempt = 0; attempt < maximumAttempts; attempt += 1) {
-    try {
+  return recoverQuestion(
+    () => {
       const selected = enabled[randomInteger(0, enabled.length - 1, random)]
       const [first, second] = generateOperands(selected, difficulty, random)
-      const question = createQuestion(
-        selected,
-        difficulty,
-        first,
-        second,
-        random,
-      )
-      if (isValidQuestion(question)) return question
-      lastError = new Error('Generated question did not pass validation.')
-    } catch (error) {
-      lastError = error
-    }
-  }
-  throw new Error('Could not generate a valid question after 3 attempts.', {
-    cause: lastError,
-  })
+      return createQuestion(selected, difficulty, first, second, random)
+    },
+    () => {
+      const selected = enabled[0]
+      const [first, second] = generateOperands(selected, difficulty, () => 0)
+      return createQuestion(selected, difficulty, first, second, () => 0)
+    },
+  )
 }
 
 export const generateAdditionQuestion = (

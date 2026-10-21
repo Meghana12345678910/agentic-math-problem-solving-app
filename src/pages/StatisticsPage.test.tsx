@@ -144,7 +144,8 @@ describe('Phase 10 statistics page', () => {
       ...defaultSettings,
       animationsEnabled: false,
     })
-    localStorage.setItem('mathPractice.mistakePatterns', 'preserve-patterns')
+    const savedPatterns = localStorage.getItem('mathPractice.mistakePatterns')
+    expect(storageService.loadMistakePatterns()).toHaveLength(1)
     localStorage.setItem('unrelated', 'keep')
     localStorage.setItem('mathPractice.statistics', '{"attempted":999}')
     mount()
@@ -163,7 +164,7 @@ describe('Phase 10 statistics page', () => {
     ).toBe(0)
     expect(fresh.loadSettings().animationsEnabled).toBe(false)
     expect(localStorage.getItem('mathPractice.mistakePatterns')).toBe(
-      'preserve-patterns',
+      savedPatterns,
     )
     expect(localStorage.getItem('unrelated')).toBe('keep')
   })

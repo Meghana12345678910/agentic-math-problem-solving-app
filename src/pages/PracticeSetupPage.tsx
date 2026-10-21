@@ -1,8 +1,9 @@
+import ErrorMessage from '../components/common/ErrorMessage'
 import { eligiblePatterns } from '../services/reviewService'
 import { storageService } from '../services/storageService'
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import OperationSelector from '../components/practice/OperationSelector'
 import DifficultySelector from '../components/practice/DifficultySelector'
 import SessionLengthSelector from '../components/practice/SessionLengthSelector'
@@ -13,6 +14,8 @@ import type {
 } from '../types/practiceConfiguration'
 
 function PracticeSetupPage() {
+  const location = useLocation()
+  const sessionError: unknown = location.state?.sessionError
   const [defaults] = useState(() => storageService.loadSettings())
   const [operations, setOperations] = useState<MathOperation[]>(
     defaults.defaultOperations,
@@ -51,6 +54,9 @@ function PracticeSetupPage() {
   return (
     <section>
       <h1>Practice setup</h1>
+      {typeof sessionError === 'string' && (
+        <ErrorMessage title="Let's start a session" message={sessionError} />
+      )}
       <p>Choose what you would like to practice.</p>
       <form className="practice-setup" onSubmit={startSession}>
         <OperationSelector selected={operations} onChange={setOperations} />

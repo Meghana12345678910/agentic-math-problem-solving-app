@@ -221,19 +221,30 @@ export function createStorageService(
       const cached = memory.get(key)
       return valid(cached) ? cached : fallback
     }
+    let raw: string | null
     try {
-      const raw = getStorage().getItem(key)
-      if (raw === null) return fallback
-      const value: unknown = JSON.parse(raw)
-      if (!valid(value)) throw new Error('Invalid stored data')
-      memory.set(key, value)
-      return value
+      raw = getStorage().getItem(key)
     } catch {
       warn()
       const cached = memory.get(key)
       return valid(cached) ? cached : fallback
     }
+    if (raw === null) return fallback
+    try {
+      const value: unknown = JSON.parse(raw)
+      if (!valid(value)) throw new Error('Invalid stored data')
+      memory.set(key, value)
+      return value
+    } catch {
+      // Repair this category only. A blocked write still uses the safe value in memory.
+      write(name, fallback)
+      warn(
+        `Some saved ${name === 'activeSession' ? 'session' : name} could not be read. That part has been reset so you can keep practicing. Other saved progress has been kept.`,
+      )
+      return fallback
+    }
   }
+
   function write<T>(name: string, value: T): boolean {
     if (!initialized) initialize()
     const key = prefix + name
@@ -343,7 +354,14 @@ export function createStorageService(
         warn()
       }
     }
-    return [...unique.values()]
+    const cleaned = [...unique.values()]
+    if (JSON.stringify(records) !== JSON.stringify(cleaned)) {
+      write('mistakePatterns', cleaned)
+      warn(
+        'Some saved mistake patterns could not be read. You can keep practicing. Valid patterns and other saved progress have been kept.',
+      )
+    }
+    return cleaned
   }
   function saveMistakePatterns(patterns: MistakePattern[]) {
     if (

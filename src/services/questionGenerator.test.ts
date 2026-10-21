@@ -186,9 +186,7 @@ describe('generator validation and randomness', () => {
       RangeError,
     )
     const broken = vi.fn(() => NaN)
-    expect(() => generateQuestion('addition', 1, broken)).toThrow(
-      'after 3 attempts',
-    )
+    expect(isValidQuestion(generateQuestion('addition', 1, broken))).toBe(true)
     expect(broken).toHaveBeenCalledTimes(3)
     const transient = vi.fn().mockReturnValueOnce(NaN).mockReturnValue(0)
     expect(isValidQuestion(generateQuestion('addition', 1, transient))).toBe(

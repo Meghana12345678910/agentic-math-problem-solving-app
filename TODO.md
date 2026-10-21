@@ -1020,41 +1020,41 @@ src/types/
 ## Phase 19: Error Handling
 ### 76. Handle Invalid Stored Data
 
-- [ ] Detect invalid settings.
+- [x] Detect invalid settings.
 
-- [ ] Detect invalid attempts.
+- [x] Detect invalid attempts.
 
-- [ ] Detect invalid sessions.
+- [x] Detect invalid sessions.
 
-- [ ] Detect invalid mistake patterns.
+- [x] Detect invalid mistake patterns.
 
-- [ ] Reset only the affected data category.
+- [x] Reset only the affected data category.
 
-- [ ] Avoid crashing the application.
+- [x] Avoid crashing the application.
 
 ### 77. Handle Question-Generation Failures
 
-- [ ] Validate every generated question.
+- [x] Validate every generated question.
 
-- [ ] Retry generation after an invalid result.
+- [x] Retry generation after an invalid result.
 
-- [ ] Set a maximum retry count.
+- [x] Set a maximum retry count.
 
-- [ ] Provide a fallback question.
+- [x] Provide a fallback question.
 
-- [ ] Log useful development errors.
+- [x] Log useful development errors.
 
 ### 78. Add User-Friendly Error Messages
 
-- [ ] Add a general error component.
+- [x] Add a general error component.
 
-- [ ] Explain storage errors in simple language.
+- [x] Explain storage errors in simple language.
 
-- [ ] Explain missing-session errors.
+- [x] Explain missing-session errors.
 
-- [ ] Provide a safe way to return home.
+- [x] Provide a safe way to return home.
 
-- [ ] Avoid exposing technical stack traces.
+- [x] Avoid exposing technical stack traces.
 
 ## Phase 20: Testing
 ### 79. Complete Unit Tests

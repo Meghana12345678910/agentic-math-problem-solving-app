@@ -1,3 +1,4 @@
+import { recoverQuestion } from './questionRecovery'
 import type { MistakePattern } from '../types/mistake'
 import type { MathOperation, Question } from '../types/question'
 import type { RandomSource } from '../utils/math'
@@ -101,7 +102,7 @@ function candidates(
 /** Keep bounded, in-memory repeat history; no review sessions or mastery updates. */
 export function createSimilarQuestionGenerator() {
   const lastFacts = new Map<string, string>()
-  return function generate(
+  function generate(
     pattern: MistakePattern,
     options: GenerationOptions = {},
   ): Question {
@@ -159,6 +160,17 @@ export function createSimilarQuestionGenerator() {
       source: 'mistake-review',
       mistakePatternId: pattern.id,
     }
+  }
+  return (pattern: MistakePattern, options: GenerationOptions = {}) => {
+    // Invalid caller input remains an error; only generation failures are retried.
+    if (!isMistakePattern(pattern) || !isValidFact(pattern))
+      throw new RangeError(
+        'A valid mistake pattern within its difficulty is required.',
+      )
+    return recoverQuestion(
+      () => generate(pattern, options),
+      () => generate(pattern, { ...options, random: () => 0 }),
+    )
   }
 }
 export const generateSimilarQuestion = createSimilarQuestionGenerator()

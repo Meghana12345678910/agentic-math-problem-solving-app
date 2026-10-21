@@ -1,3 +1,4 @@
+import ErrorMessage from '../components/common/ErrorMessage'
 import { eligiblePatterns } from '../services/reviewService'
 import { storageService } from '../services/storageService'
 import { useEffect, useRef } from 'react'
@@ -35,12 +36,12 @@ function SessionSummaryPage() {
         <h1 ref={heading} tabIndex={-1}>
           Session summary
         </h1>
-        <p>No completed session is available yet.</p>
+        <ErrorMessage
+          title="No completed session"
+          message="No completed session is available yet."
+        />
         <Link className="button" to="/practice/setup">
           Start Practice
-        </Link>
-        <Link className="button button-secondary" to="/">
-          Return Home
         </Link>
       </section>
     )

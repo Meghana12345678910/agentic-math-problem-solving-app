@@ -160,14 +160,33 @@ function PracticePage() {
       ? saved
       : null
   const configuration = explicit ?? matching?.configuration
-  if (!configuration) return <Navigate to="/practice/setup" replace />
+  if (!configuration)
+    return (
+      <Navigate
+        to="/practice/setup"
+        replace
+        state={{
+          sessionError:
+            'We could not find a practice session to continue. Choose your practice options to start a new one.',
+        }}
+      />
+    )
   if (
     !matching &&
     configuration.mode === 'mistake-review' &&
     !eligiblePatterns(storageService.loadMistakePatterns(), configuration)
       .length
   )
-    return <Navigate to="/practice/setup" replace />
+    return (
+      <Navigate
+        to="/practice/setup"
+        replace
+        state={{
+          sessionError:
+            'There are no active mistakes for these choices. Choose regular practice or different options.',
+        }}
+      />
+    )
   return (
     <ActivePractice
       key={location.key}

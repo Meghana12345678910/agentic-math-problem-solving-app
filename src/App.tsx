@@ -1,3 +1,5 @@
+import { useLocation } from 'react-router-dom'
+import ErrorBoundary from './components/common/ErrorBoundary'
 import { useEffect } from 'react'
 import { storageService } from './services/storageService'
 import StorageWarning from './components/common/StorageWarning'
@@ -7,6 +9,7 @@ import AppRoutes from './app/AppRoutes'
 import './App.css'
 
 function App() {
+  const location = useLocation()
   useEffect(() => {
     storageService.initialize()
     storageService.loadSettings()
@@ -20,7 +23,9 @@ function App() {
       <Header />
       <PageContainer>
         <StorageWarning />
-        <AppRoutes />
+        <ErrorBoundary key={location.key}>
+          <AppRoutes />
+        </ErrorBoundary>
       </PageContainer>
     </>
   )
