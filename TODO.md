@@ -268,45 +268,45 @@ src/types/
 ## Phase 5: Multiple-Choice Answers
 ### 17. Generate Incorrect Answer Choices
 
-- [ ] Generate three incorrect answers.
+- [x] Generate three incorrect answers.
 
-- [ ] Ensure incorrect answers differ from the correct answer.
+- [x] Ensure incorrect answers differ from the correct answer.
 
-- [ ] Ensure all choices are unique.
+- [x] Ensure all choices are unique.
 
-- [ ] Keep incorrect answers plausible.
+- [x] Keep incorrect answers plausible.
 
-- [ ] Avoid negative choices when negative values are not allowed.
+- [x] Avoid negative choices when negative values are not allowed.
 
-- [ ] Prevent fractional choices in whole-number questions.
+- [x] Prevent fractional choices in whole-number questions.
 
-- [ ] Add a retry limit to prevent infinite loops.
+- [x] Add a retry limit to prevent infinite loops.
 
 ### 18. Add Operation-Specific Distractors
 
-- [ ] Generate nearby-number distractors.
+- [x] Generate nearby-number distractors.
 
-- [ ] Generate addition mistake distractors.
+- [x] Generate addition mistake distractors.
 
-- [ ] Generate subtraction mistake distractors.
+- [x] Generate subtraction mistake distractors.
 
-- [ ] Generate multiplication-table distractors.
+- [x] Generate multiplication-table distractors.
 
-- [ ] Generate division fact-family distractors.
+- [x] Generate division fact-family distractors.
 
-- [ ] Test common edge cases such as answers near zero.
+- [x] Test common edge cases such as answers near zero.
 
 ### 19. Shuffle the Answer Choices
 
-- [ ] Combine the correct answer with the distractors.
+- [x] Combine the correct answer with the distractors.
 
-- [ ] Shuffle all four choices.
+- [x] Shuffle all four choices.
 
-- [ ] Confirm that the correct answer appears exactly once.
+- [x] Confirm that the correct answer appears exactly once.
 
-- [ ] Confirm that the correct answer does not remain in a predictable position.
+- [x] Confirm that the correct answer does not remain in a predictable position.
 
-- [ ] Add automated tests.
+- [x] Add automated tests.
 
 ## Phase 6: Question Card
 ### 20. Create the Answer Choice Component

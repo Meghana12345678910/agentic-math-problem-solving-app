@@ -84,7 +84,7 @@ describe.each(levels)('difficulty %s', (difficulty) => {
           expect(Number.isInteger(choice)).toBe(true)
           expect(choice).toBeGreaterThanOrEqual(0)
           expect(Math.abs(choice - q.correctAnswer)).toBeLessThanOrEqual(
-            Math.max(3, Math.floor(q.correctAnswer * 0.05) * 3),
+            Math.max(3, Math.ceil(q.correctAnswer * 0.2)),
           )
         }
         expect(q.operation).toBe(operation)

@@ -5,7 +5,7 @@ import type {
 } from '../types/question.ts'
 import { randomInteger } from '../utils/math.ts'
 import type { RandomSource } from '../utils/math.ts'
-import { shuffle } from '../utils/shuffle.ts'
+import { generateAnswerChoices } from './answerChoices.ts'
 import { createId } from '../utils/ids.ts'
 
 const operations: MathOperation[] = [
@@ -76,18 +76,6 @@ function generateOperands(
       return [divisor * quotient, divisor]
     }
   }
-}
-
-/** Nearby integer answers provide basic plausible choices without retry loops. */
-function generateChoices(answer: number, random: RandomSource): number[] {
-  const step = Math.max(1, Math.floor(answer * 0.05))
-  const choices = new Set([answer])
-  for (const offset of [-1, 1, -2, 2, 3]) {
-    const candidate = answer + offset * step
-    if (candidate >= 0) choices.add(candidate)
-    if (choices.size === 4) break
-  }
-  return shuffle([...choices], random)
 }
 
 function operandsMatchDifficulty(question: Question): boolean {
@@ -181,7 +169,15 @@ export function generateQuestion(
         secondOperand: second,
         displayText: `${first} ${symbols[selected]} ${second} = ?`,
         correctAnswer: answer,
-        choices: generateChoices(answer, random),
+        choices: generateAnswerChoices(
+          {
+            operation: selected,
+            firstOperand: first,
+            secondOperand: second,
+            correctAnswer: answer,
+          },
+          random,
+        ),
         source: 'regular',
       }
       if (isValidQuestion(question)) return question
