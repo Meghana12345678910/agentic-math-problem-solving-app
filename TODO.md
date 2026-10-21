@@ -950,47 +950,47 @@ src/types/
 ## Phase 17: Responsive Design and Polish
 ### 70. Optimize for Tablets
 
-- [ ] Use large touch targets.
+- [x] Use large touch targets.
 
-- [ ] Center the practice card.
+- [x] Center the practice card.
 
-- [ ] Keep answer choices easy to reach.
+- [x] Keep answer choices easy to reach.
 
 - [ ] Test portrait and landscape orientations.
 
 ### 71. Optimize for Mobile Devices
 
-- [ ] Stack answer choices when necessary.
+- [x] Stack answer choices when necessary.
 
-- [ ] Adjust card width.
+- [x] Adjust card width.
 
-- [ ] Prevent horizontal scrolling.
+- [x] Prevent horizontal scrolling.
 
-- [ ] Simplify navigation.
+- [x] Simplify navigation.
 
 - [ ] Test on common small-screen sizes.
 
 ### 72. Optimize the Statistics Layout
 
-- [ ] Convert wide tables to cards on small screens.
+- [x] Convert wide tables to cards on small screens.
 
-- [ ] Prevent labels and values from overlapping.
+- [x] Prevent labels and values from overlapping.
 
-- [ ] Keep recent sessions readable.
+- [x] Keep recent sessions readable.
 
-- [ ] Support horizontal scrolling only when necessary.
+- [x] Support horizontal scrolling only when necessary.
 
 ### 73. Add Child-Friendly Feedback
 
-- [ ] Add positive feedback messages.
+- [x] Add positive feedback messages.
 
-- [ ] Add supportive messages after mistakes.
+- [x] Add supportive messages after mistakes.
 
-- [ ] Avoid shaming language.
+- [x] Avoid shaming language.
 
-- [ ] Randomize feedback without becoming distracting.
+- [x] Randomize feedback without becoming distracting.
 
-- [ ] Add an option to disable feedback effects.
+- [x] Add an option to disable feedback effects.
 
 ## Phase 18: Session Recovery and Navigation Safety
 ### 74. Persist an Active Session

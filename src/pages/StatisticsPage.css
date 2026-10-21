@@ -72,3 +72,26 @@
 .frequent-facts {
   padding-left: 1.5rem;
 }
+
+.statistics-card dt,
+.statistics-card dd {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.statistics-card h3,
+.statistics-card h4,
+.statistics-card time {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 36rem) {
+  .statistics-card dl {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .statistics-card dd {
+    margin-bottom: 0.75rem;
+  }
+  .statistics-grid {
+    gap: 0.75rem;
+  }
+}

@@ -1,3 +1,4 @@
+import { getFeedbackMessage } from '../../utils/feedback'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
 import { describeQuestion } from '../../utils/questionText'
 import { playFeedbackSound } from '../../utils/sound'
@@ -31,7 +32,12 @@ function CardContent({
   function reportResult(correct: boolean) {
     if (!isCardFlipped || resultSubmitted.current) return
     resultSubmitted.current = true
-    if (storageService.loadSettings().soundEnabled) playFeedbackSound(correct)
+    const preferences = storageService.loadSettings()
+    if (
+      preferences.soundEnabled &&
+      preferences.feedbackEffectsEnabled !== false
+    )
+      playFeedbackSound(correct)
     setResult(correct)
     if (selectedAnswer !== null) onResult?.(correct, selectedAnswer)
   }
@@ -82,8 +88,8 @@ function CardContent({
             ? `Correct answer: ${question.correctAnswer}. Your answer: ${selectedAnswer}.`
             : 'Choose an answer, then flip the card.'
           : result
-            ? 'You marked this question as right. Nice work!'
-            : 'You marked this question as wrong. Keep practicing!'}
+            ? 'You marked this question as right.'
+            : 'You marked this question as wrong.'}
       </p>
     </div>
   )
@@ -92,6 +98,7 @@ function CardContent({
 function QuestionCard(props: QuestionCardProps) {
   const reducedMotion = useReducedMotion()
   const motionNoteId = useId()
+  const [feedback, setFeedback] = useState('')
   const [animationsEnabled, setAnimationsEnabled] = useState(
     () => storageService.loadSettings().animationsEnabled,
   )
@@ -133,8 +140,18 @@ function QuestionCard(props: QuestionCardProps) {
       <CardContent
         key={props.question.id}
         question={props.question}
-        onResult={props.onResult}
+        onResult={(correct, selectedAnswer) => {
+          setFeedback(
+            storageService.loadSettings().feedbackEffectsEnabled === false
+              ? ''
+              : getFeedbackMessage(correct, feedback),
+          )
+          props.onResult?.(correct, selectedAnswer)
+        }}
       />
+      <p className="feedback-message" aria-live="polite" aria-atomic="true">
+        {feedback}
+      </p>
     </section>
   )
 }

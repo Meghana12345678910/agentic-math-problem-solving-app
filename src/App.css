@@ -199,3 +199,54 @@ progress {
   margin: 0.5rem 0 1.5rem;
   accent-color: #234ca4;
 }
+
+/* Let long labels grow and wrap without hiding keyboard-focus outlines. */
+.page-container > section,
+.header-content > *,
+.button {
+  min-width: 0;
+}
+.button {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  touch-action: manipulation;
+}
+.main-navigation a {
+  touch-action: manipulation;
+}
+.practice-setup > label {
+  display: grid;
+  gap: 0.5rem;
+}
+.session-configuration {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 0.25rem 1rem;
+}
+.session-configuration dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 36rem) {
+  .main-navigation {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .main-navigation a {
+    justify-content: center;
+    overflow-wrap: anywhere;
+  }
+}
+@media (max-width: 30rem) {
+  .session-configuration {
+    grid-template-columns: 1fr;
+  }
+  .session-configuration dd {
+    margin-bottom: 0.5rem;
+  }
+}
+@media (min-width: 48rem) and (max-height: 36rem) {
+  .page-container {
+    padding-top: 1rem;
+  }
+}

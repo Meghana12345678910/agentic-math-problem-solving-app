@@ -1,7 +1,9 @@
-﻿import type { DifficultyLevel, MathOperation } from './question'
+import type { DifficultyLevel, MathOperation } from './question'
 import type { SessionLength } from './session'
 
 export interface AppSettings {
+  // Optional for compatibility with settings saved before Phase 17.
+  feedbackEffectsEnabled?: boolean
   soundEnabled: boolean
   animationsEnabled: boolean
   showExplanations: boolean

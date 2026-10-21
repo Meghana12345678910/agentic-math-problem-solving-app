@@ -11,6 +11,7 @@ import { isPracticeConfiguration } from '../utils/practiceConfiguration'
 
 export const defaultSettings: AppSettings = {
   soundEnabled: false,
+  feedbackEffectsEnabled: true,
   animationsEnabled: true,
   showExplanations: true,
   defaultSessionLength: 10,
@@ -39,6 +40,8 @@ const difficulty = (value: unknown) => [1, 2, 3, 4].includes(value as number)
 export function isSettings(value: unknown): value is AppSettings {
   return (
     record(value) &&
+    (value.feedbackEffectsEnabled === undefined ||
+      typeof value.feedbackEffectsEnabled === 'boolean') &&
     ['soundEnabled', 'animationsEnabled', 'showExplanations'].every(
       (key) => typeof value[key] === 'boolean',
     ) &&

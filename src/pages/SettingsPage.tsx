@@ -40,6 +40,7 @@ function SettingsPage() {
       <form className="practice-setup" onSubmit={save}>
         <fieldset>
           <legend>Preferences</legend>
+
           <label className="selector-option">
             <input
               type="checkbox"
@@ -76,6 +77,24 @@ function SettingsPage() {
             />
             Show explanations
           </label>
+          <label className="selector-option">
+            <input
+              type="checkbox"
+              checked={settings.feedbackEffectsEnabled !== false}
+              aria-describedby="feedback-effects-help"
+              onChange={(event) =>
+                setSettings({
+                  ...settings,
+                  feedbackEffectsEnabled: event.target.checked,
+                })
+              }
+            />
+            Encouraging feedback effects
+          </label>
+          <p id="feedback-effects-help">
+            Turn off encouraging messages and feedback sounds. Your answers and
+            results will still be shown.
+          </p>
         </fieldset>
         <label>
           Correct similar answers required for mastery

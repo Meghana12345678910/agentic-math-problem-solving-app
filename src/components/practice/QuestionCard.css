@@ -83,3 +83,43 @@
     width: 100%;
   }
 }
+
+.question-card {
+  width: 100%;
+  min-width: 0;
+}
+.answer-choice {
+  touch-action: manipulation;
+  overflow-wrap: anywhere;
+}
+.animation-setting {
+  flex-wrap: wrap;
+}
+.feedback-message:not(:empty) {
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background: #edf2ff;
+  font-weight: 700;
+}
+@media (min-width: 48rem) and (max-height: 36rem) {
+  .question-card {
+    margin: 1rem auto;
+  }
+  .card-face {
+    padding: 1rem 1.5rem;
+  }
+  .math-problem {
+    margin: 0.5rem 0;
+  }
+  .answer-grid {
+    margin: 1rem 0;
+  }
+}
+@media (max-width: 30rem) {
+  .card-face {
+    padding: 1rem;
+  }
+  .question-card {
+    margin: 1.25rem auto;
+  }
+}
