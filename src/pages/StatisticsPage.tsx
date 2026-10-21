@@ -1,5 +1,5 @@
 import MistakeStatistics from '../components/statistics/MistakeStatistics'
-import { useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { storageService } from '../services/storageService'
 import { calculateStatistics } from '../services/statisticsService'
@@ -31,10 +31,17 @@ function loadHistory() {
 }
 
 function StatisticsPage() {
+  const heading = useRef<HTMLHeadingElement>(null)
+  useEffect(() => {
+    heading.current?.focus()
+  }, [])
   const [history, setHistory] = useState(loadHistory)
   const [confirmReset, setConfirmReset] = useState(false)
   const [message, setMessage] = useState('')
-  const statistics = calculateStatistics(history.attempts)
+  const statistics = useMemo(
+    () => calculateStatistics(history.attempts),
+    [history.attempts],
+  )
 
   function reset() {
     const saved = storageService.resetStatistics()
@@ -49,7 +56,9 @@ function StatisticsPage() {
 
   return (
     <section>
-      <h1>Statistics</h1>
+      <h1 ref={heading} tabIndex={-1}>
+        Statistics
+      </h1>
       {statistics.attempted === 0 && (
         <p>
           No questions answered yet.{' '}

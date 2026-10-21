@@ -171,3 +171,7 @@ Missing practice sessions return to setup with a clear explanation and a Return 
 ## Testing verification (Phase 20)
 
 See [TESTING.md](TESTING.md) for the requirement-to-test coverage map, verification commands, accessibility audit scope and limitations, and exact manual browser checks. Phase 20 adds complete keyboard-only addition sessions, mixed-operation practice, continuous practice beyond 20 questions, regular-mistake-to-review-to-mastery and reset flows, and simulated refresh through completion. The axe-core development dependency checks page and dialog states; its heading-order finding was fixed by using h2 for card headings. Screen-reader, browser-zoom, and manual browser accessibility review remain pending in TODO.md. Phase 21 is unchanged.
+
+## Performance and data management (Phase 21)
+
+See [PERFORMANCE.md](PERFORMANCE.md) for rendering/storage changes, the 5,000-attempt storage measurement, before/after bundle sizes, dependency/asset audit, and exact browser checks. Statistics and Settings now load on demand with accessible loading and focus behavior. The newest 100 session summaries are retained while all detailed attempts and totals remain available. Conditional attempt compaction is deferred based on the measured fixture; slower-device checks remain pending. Phase 22 is unchanged.

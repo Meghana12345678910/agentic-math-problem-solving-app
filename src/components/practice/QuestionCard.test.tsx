@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { renderReady as render } from '../../test/renderReady'
+import { fireEvent, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { TestRouter as MemoryRouter } from '../../test/TestRouter'
@@ -17,8 +18,8 @@ const question: Question = {
   difficulty: 2,
   source: 'regular',
 }
-function card(onResult = vi.fn()) {
-  return render(
+async function card(onResult = vi.fn()) {
+  return await render(
     <QuestionCard
       question={question}
       questionNumber={3}
@@ -29,11 +30,11 @@ function card(onResult = vi.fn()) {
 }
 
 describe('Phase 6 question card', () => {
-  it('shows only the front with four choices, progress, and a disabled flip', () => {
-    card()
+  it('shows only the front with four choices, progress, and a disabled flip', async () => {
+    await card()
     expect(screen.getByText('Question 3 of 10')).toBeInTheDocument()
     expect(
-      screen.getByRole('heading', { name: '7 times 8 equals what?' }),
+      await screen.findByRole('heading', { name: '7 times 8 equals what?' }),
     ).toBeInTheDocument()
     expect(screen.getAllByRole('button', { name: /^Answer / })).toHaveLength(4)
     expect(screen.getByRole('button', { name: 'Flip Card' })).toBeDisabled()
@@ -48,7 +49,7 @@ describe('Phase 6 question card', () => {
   it('allows changing selection and never reports a result before self-assessment', async () => {
     const user = userEvent.setup()
     const result = vi.fn()
-    card(result)
+    await card(result)
     await user.click(screen.getByRole('button', { name: 'Answer 48' }))
     expect(screen.getByRole('button', { name: 'Answer 48' })).toHaveAttribute(
       'aria-pressed',
@@ -66,7 +67,7 @@ describe('Phase 6 question card', () => {
     expect(screen.getByText('7 × 8 = 56')).toBeInTheDocument()
     expect(screen.getByText('Your answer: 56')).toBeInTheDocument()
     expect(
-      screen.getByRole('heading', { name: 'Answer revealed' }),
+      await screen.findByRole('heading', { name: 'Answer revealed' }),
     ).toHaveFocus()
     expect(
       screen.queryByRole('group', { name: 'Answer choices' }),
@@ -79,7 +80,7 @@ describe('Phase 6 question card', () => {
     async (correct) => {
       const user = userEvent.setup()
       const result = vi.fn()
-      card(result)
+      await card(result)
       // A wrong selected number must not override self-reported correctness.
       await user.click(screen.getByRole('button', { name: 'Answer 48' }))
       await user.click(screen.getByRole('button', { name: 'Flip Card' }))
@@ -95,7 +96,7 @@ describe('Phase 6 question card', () => {
 
   it('locks selection after flipping, even for hidden controls', async () => {
     const user = userEvent.setup()
-    card()
+    await card()
     const oldAnswer = screen.getByRole('button', { name: 'Answer 48' })
     await user.click(screen.getByRole('button', { name: 'Answer 56' }))
     await user.click(screen.getByRole('button', { name: 'Flip Card' }))
@@ -106,7 +107,7 @@ describe('Phase 6 question card', () => {
   it('resets selection, flip state, and result lock for a new question ID', async () => {
     const user = userEvent.setup()
     const result = vi.fn()
-    const view = card(result)
+    const view = await card(result)
     await user.click(screen.getByRole('button', { name: 'Answer 56' }))
     await user.click(screen.getByRole('button', { name: 'Flip Card' }))
     await user.click(screen.getByRole('button', { name: 'I Got It Right' }))
@@ -133,7 +134,7 @@ describe('Phase 6 question card', () => {
 
   it('works with animation turned off and shows continuous question numbering', async () => {
     const user = userEvent.setup()
-    render(
+    await render(
       <QuestionCard
         question={question}
         questionNumber={8}
@@ -152,13 +153,13 @@ describe('Phase 6 question card', () => {
     await user.click(screen.getByRole('button', { name: 'Answer 56' }))
     await user.click(screen.getByRole('button', { name: 'Flip Card' }))
     expect(
-      screen.getByRole('heading', { name: 'Answer revealed' }),
+      await screen.findByRole('heading', { name: 'Answer revealed' }),
     ).toBeInTheDocument()
   })
 
   it('supports number selection, Space, and Enter from the keyboard', async () => {
     const user = userEvent.setup()
-    card()
+    await card()
     screen.getByRole('button', { name: 'Answer 48' }).focus()
     await user.keyboard('3')
     expect(screen.getByRole('button', { name: 'Answer 56' })).toHaveAttribute(
@@ -180,7 +181,7 @@ describe('Phase 6 question card', () => {
 
   it('does not treat the animation checkbox as an answer shortcut', async () => {
     const user = userEvent.setup()
-    card()
+    await card()
     screen.getByRole('checkbox', { name: 'Animate card flip' }).focus()
     await user.keyboard('1')
     expect(screen.getByRole('button', { name: 'Flip Card' })).toBeDisabled()
@@ -188,7 +189,7 @@ describe('Phase 6 question card', () => {
 
   it('opens the sample card from the practice page without starting a session', async () => {
     const user = userEvent.setup()
-    render(
+    await render(
       <MemoryRouter
         initialEntries={[
           {
@@ -211,7 +212,7 @@ describe('Phase 6 question card', () => {
       screen.getByRole('button', { name: 'End session and leave' }),
     )
     expect(
-      screen.getByRole('heading', { name: 'Try a sample card' }),
+      await screen.findByRole('heading', { name: 'Try a sample card' }),
     ).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Flip Card' })).toBeDisabled()
   })

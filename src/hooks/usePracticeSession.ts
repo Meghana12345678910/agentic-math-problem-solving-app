@@ -73,34 +73,39 @@ function createSession(
 }
 
 export function usePracticeSession(
-  config: PracticeConfiguration,
+  configuration: PracticeConfiguration,
   restored?: ActiveSessionSnapshot | null,
 ) {
+  const [config] = useState(() => configuration)
   const [review] = useState(() =>
     createReviewGenerator(config, restored?.question),
   )
-  const [state, setState] = useState(() =>
+  const [initial] = useState(() =>
     restored ? { ...restored, active: true } : createSession(config, review),
   )
+  const [state, setState] = useState(initial)
   // Synchronous state protects against duplicate events before React renders.
   const current = useRef(state)
-  function persist(snapshot: SessionState) {
-    storageService.saveSession(snapshot.session)
+  function persist(snapshot: SessionState, previous?: SessionState) {
+    if (snapshot.session !== previous?.session)
+      storageService.saveSession(snapshot.session)
     if (snapshot.active)
       storageService.saveActiveSession({ ...snapshot, configuration: config })
     else storageService.clearActiveSession(snapshot.session.id)
   }
   useEffect(() => {
-    storageService.saveSession(state.session)
-    if (state.active)
-      storageService.saveActiveSession({ ...state, configuration: config })
-    else storageService.clearActiveSession(state.session.id)
-  }, [state, config])
+    storageService.saveSession(initial.session)
+    if (initial.active)
+      storageService.saveActiveSession({ ...initial, configuration: config })
+    else storageService.clearActiveSession(initial.session.id)
+  }, [initial, config])
 
   function updateCard(selectedAnswer: number | null, isCardFlipped: boolean) {
     const previous = current.current
     if (
       !previous.active ||
+      (previous.selectedAnswer === selectedAnswer &&
+        previous.isCardFlipped === isCardFlipped) ||
       previous.isCardFlipped ||
       (selectedAnswer !== null &&
         !previous.question.choices.includes(selectedAnswer)) ||
@@ -109,7 +114,7 @@ export function usePracticeSession(
       return
     const updated = { ...previous, selectedAnswer, isCardFlipped }
     current.current = updated
-    persist(updated)
+    persist(updated, previous)
     setState(updated)
   }
 
@@ -172,7 +177,7 @@ export function usePracticeSession(
       attempts: [...previous.attempts, attempt],
     }
     current.current = updated
-    persist(updated)
+    persist(updated, previous)
     setState(updated)
   }
 
@@ -185,7 +190,7 @@ export function usePracticeSession(
       session: { ...previous.session, completedAt: new Date().toISOString() },
     }
     current.current = updated
-    persist(updated)
+    persist(updated, previous)
     setState(updated)
   }
 

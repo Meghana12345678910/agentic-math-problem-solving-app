@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { storageService } from '../services/storageService'
@@ -9,6 +9,10 @@ import ConfirmDialog from '../components/common/ConfirmDialog'
 import type { PracticeSessionLength } from '../types/practiceConfiguration'
 
 function SettingsPage() {
+  const heading = useRef<HTMLHeadingElement>(null)
+  useEffect(() => {
+    heading.current?.focus()
+  }, [])
   const [settings, setSettings] = useState(() => storageService.loadSettings())
   const [message, setMessage] = useState('')
   const [confirmClear, setConfirmClear] = useState(false)
@@ -36,7 +40,9 @@ function SettingsPage() {
 
   return (
     <section>
-      <h1>Settings</h1>
+      <h1 ref={heading} tabIndex={-1}>
+        Settings
+      </h1>
       <form className="practice-setup" onSubmit={save}>
         <fieldset>
           <legend>Preferences</legend>

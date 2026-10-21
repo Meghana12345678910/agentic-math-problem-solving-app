@@ -1,4 +1,5 @@
-import { act, render, screen } from '@testing-library/react'
+import { renderReady as render } from '../test/renderReady'
+import { act, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { beforeEach, describe, expect, it } from 'vitest'
@@ -17,7 +18,7 @@ const configuration: PracticeConfiguration = {
   sessionLength: 5,
   mode: 'regular',
 }
-function mount(
+async function mount(
   entries: NonNullable<
     Parameters<typeof createMemoryRouter>[1]
   >['initialEntries'] = [
@@ -27,7 +28,7 @@ function mount(
   const router = createMemoryRouter([{ path: '*', element: <App /> }], {
     initialEntries: entries,
   })
-  return { ...render(<RouterProvider router={router} />), router }
+  return { ...(await render(<RouterProvider router={router} />)), router }
 }
 async function reveal() {
   const user = userEvent.setup()
@@ -43,7 +44,7 @@ async function reveal() {
 describe('Phase 18 active-session recovery', () => {
   it('restores the exact question, selected answer, flipped side, session identity, and totals', async () => {
     const user = userEvent.setup()
-    const view = mount()
+    const view = await mount()
     await reveal()
     await user.click(screen.getByRole('button', { name: 'I Got It Wrong' }))
     const selected = await reveal()
@@ -53,11 +54,11 @@ describe('Phase 18 active-session recovery', () => {
     expect(saved.isCardFlipped).toBe(true)
     expect(isActiveSessionSnapshot(saved)).toBe(true)
     view.unmount()
-    mount(['/practice/session'])
+    await mount(['/practice/session'])
     expect(screen.getByText('Question 2 of 5')).toBeInTheDocument()
     expect(screen.getByText('Your answer: ' + selected)).toBeInTheDocument()
     expect(
-      screen.getByRole('heading', { name: 'Answer revealed' }),
+      await screen.findByRole('heading', { name: 'Answer revealed' }),
     ).toHaveFocus()
     expect(
       screen.getByText('Attempted: 1. Correct: 0. Incorrect: 1.'),
@@ -75,13 +76,13 @@ describe('Phase 18 active-session recovery', () => {
 
   it('restores an unflipped selected answer when browser history state survives', async () => {
     const user = userEvent.setup()
-    const view = mount()
+    const view = await mount()
     const selected = screen.getAllByRole('button', { name: /^Answer / })[1]
     const label = selected.getAttribute('aria-label')!
     await user.click(selected)
     const saved = storageService.loadActiveSession()!
     view.unmount()
-    mount()
+    await mount()
     expect(screen.getByRole('button', { name: label })).toHaveAttribute(
       'aria-pressed',
       'true',
@@ -92,21 +93,21 @@ describe('Phase 18 active-session recovery', () => {
     )
   })
 
-  it('rejects invalid snapshots without crashing and preserves unrelated history', () => {
+  it('rejects invalid snapshots without crashing and preserves unrelated history', async () => {
     localStorage.setItem('mathPractice.activeSession', '{"session":"invalid"}')
     localStorage.setItem('unrelated', 'keep')
-    mount(['/practice/session'])
+    await mount(['/practice/session'])
     expect(
-      screen.getByRole('heading', { name: 'Practice setup' }),
+      await screen.findByRole('heading', { name: 'Practice setup' }),
     ).toBeInTheDocument()
     expect(localStorage.getItem('unrelated')).toBe('keep')
   })
 
-  it('does not resume a snapshot under a different explicit configuration', () => {
-    const view = mount()
+  it('does not resume a snapshot under a different explicit configuration', async () => {
+    const view = await mount()
     const original = storageService.loadActiveSession()!.session.id
     view.unmount()
-    mount([
+    await mount([
       {
         pathname: '/practice/session',
         state: {
@@ -134,7 +135,7 @@ describe('Phase 18 active-session recovery', () => {
       },
     ])
     const user = userEvent.setup()
-    const view = mount([
+    const view = await mount([
       {
         pathname: '/practice/session',
         state: { configuration: { ...configuration, mode: 'mistake-review' } },
@@ -143,7 +144,7 @@ describe('Phase 18 active-session recovery', () => {
     await reveal()
     const saved = storageService.loadActiveSession()!
     view.unmount()
-    mount(['/practice/session'])
+    await mount(['/practice/session'])
     expect(storageService.loadActiveSession()!.question.mistakePatternId).toBe(
       'parent',
     )
@@ -157,7 +158,7 @@ describe('Phase 18 active-session recovery', () => {
 describe('Phase 18 navigation safety', () => {
   it('blocks navigation, keeps the session on cancel, and ends before confirmed leaving', async () => {
     const user = userEvent.setup()
-    const view = mount()
+    const view = await mount()
     await reveal()
     const saved = storageService.loadActiveSession()!
     await user.click(screen.getByRole('link', { name: 'Statistics' }))
@@ -165,14 +166,14 @@ describe('Phase 18 navigation safety', () => {
     await user.click(screen.getByRole('button', { name: 'Keep practicing' }))
     expect(view.router.state.location.pathname).toBe('/practice/session')
     expect(
-      screen.getByRole('heading', { name: 'Answer revealed' }),
+      await screen.findByRole('heading', { name: 'Answer revealed' }),
     ).toBeInTheDocument()
     await user.click(screen.getByRole('link', { name: 'Statistics' }))
     await user.click(
       screen.getByRole('button', { name: 'End session and leave' }),
     )
     expect(
-      screen.getByRole('heading', { name: 'Statistics' }),
+      await screen.findByRole('heading', { name: 'Statistics' }),
     ).toBeInTheDocument()
     expect(storageService.loadActiveSession()).toBeNull()
     expect(
@@ -184,7 +185,7 @@ describe('Phase 18 navigation safety', () => {
 
   it('blocks browser Back and allows cancellation and confirmed leaving', async () => {
     const user = userEvent.setup()
-    const view = mount([
+    const view = await mount([
       '/statistics',
       { pathname: '/practice/session', state: { configuration } },
     ])
@@ -205,7 +206,7 @@ describe('Phase 18 navigation safety', () => {
 
   it('warns on reload/close only while active and clears recovery on completion', async () => {
     const user = userEvent.setup()
-    mount([
+    await mount([
       {
         pathname: '/practice/session',
         state: {
@@ -219,7 +220,7 @@ describe('Phase 18 navigation safety', () => {
     await user.click(screen.getByRole('button', { name: 'End Session' }))
     await user.click(screen.getByRole('button', { name: 'Yes, end session' }))
     expect(
-      screen.getByRole('heading', { name: 'Session summary' }),
+      await screen.findByRole('heading', { name: 'Session summary' }),
     ).toBeInTheDocument()
     expect(storageService.loadActiveSession()).toBeNull()
     expect(
@@ -229,8 +230,8 @@ describe('Phase 18 navigation safety', () => {
     expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument()
   })
 
-  it('clears recovery along with application data', () => {
-    const view = mount()
+  it('clears recovery along with application data', async () => {
+    const view = await mount()
     expect(storageService.loadActiveSession()).not.toBeNull()
     view.unmount()
     storageService.clearAllData()

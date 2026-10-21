@@ -1,11 +1,12 @@
-import { render, screen, within } from '@testing-library/react'
+import { renderReady as render } from '../test/renderReady'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestRouter as MemoryRouter } from '../test/TestRouter'
 import { describe, expect, it } from 'vitest'
 import App from '../App'
 
-function renderSetup() {
-  render(
+async function renderSetup() {
+  await render(
     <MemoryRouter initialEntries={['/practice/setup']}>
       <App />
     </MemoryRouter>,
@@ -13,8 +14,8 @@ function renderSetup() {
 }
 
 describe('Practice configuration', () => {
-  it('defaults to 10 questions and explains required selections', () => {
-    renderSetup()
+  it('defaults to 10 questions and explains required selections', async () => {
+    await renderSetup()
     expect(screen.getByRole('radio', { name: '10 questions' })).toBeChecked()
     expect(screen.getByRole('button', { name: 'Start Session' })).toBeDisabled()
     expect(screen.getByRole('status')).toHaveTextContent(
@@ -27,7 +28,7 @@ describe('Practice configuration', () => {
 
   it('supports every operation independently, multiple choices, and deselection', async () => {
     const user = userEvent.setup()
-    renderSetup()
+    await renderSetup()
     for (const name of [
       'Addition',
       'Subtraction',
@@ -46,7 +47,7 @@ describe('Practice configuration', () => {
 
   it('selects all operations without duplicates when used repeatedly', async () => {
     const user = userEvent.setup()
-    renderSetup()
+    await renderSetup()
     await user.click(
       screen.getByRole('button', { name: 'Select all operations' }),
     )
@@ -67,7 +68,7 @@ describe('Practice configuration', () => {
 
   it('selects only one difficulty and describes every level', async () => {
     const user = userEvent.setup()
-    renderSetup()
+    await renderSetup()
     for (const name of [
       'Level 1: Beginner',
       'Level 2: Easy',
@@ -94,7 +95,7 @@ describe('Practice configuration', () => {
     'Continuous practice',
   ])('selects and passes %s to the practice session', async (length) => {
     const user = userEvent.setup()
-    renderSetup()
+    await renderSetup()
     await user.click(screen.getByRole('checkbox', { name: 'Multiplication' }))
     await user.click(screen.getByRole('checkbox', { name: 'Division' }))
     await user.click(
@@ -109,7 +110,7 @@ describe('Practice configuration', () => {
     ).toHaveLength(1)
     await user.click(screen.getByRole('button', { name: 'Start Session' }))
     expect(
-      screen.getByRole('heading', { name: 'Practice session' }),
+      await screen.findByRole('heading', { name: 'Practice session' }),
     ).toBeInTheDocument()
     expect(screen.getByText('multiplication, division')).toBeInTheDocument()
     expect(screen.getByText('3', { selector: 'dd' })).toBeInTheDocument()
@@ -118,7 +119,7 @@ describe('Practice configuration', () => {
 
   it('requires both operation and difficulty and disables again after deselection', async () => {
     const user = userEvent.setup()
-    renderSetup()
+    await renderSetup()
     const start = screen.getByRole('button', { name: 'Start Session' })
     await user.click(screen.getByRole('checkbox', { name: 'Addition' }))
     expect(start).toBeEnabled()
@@ -128,7 +129,7 @@ describe('Practice configuration', () => {
     expect(start).toBeDisabled()
     await user.click(start)
     expect(
-      screen.getByRole('heading', { name: 'Practice setup' }),
+      await screen.findByRole('heading', { name: 'Practice setup' }),
     ).toBeInTheDocument()
     expect(screen.getByRole('status')).toHaveTextContent(
       'Choose at least one operation.',
@@ -137,14 +138,14 @@ describe('Practice configuration', () => {
 
   it('keeps Start Session disabled with difficulty alone', async () => {
     const user = userEvent.setup()
-    renderSetup()
+    await renderSetup()
     await user.click(screen.getByRole('radio', { name: 'Level 1: Beginner' }))
     expect(screen.getByRole('button', { name: 'Start Session' })).toBeDisabled()
   })
 
   it('supports keyboard operation selection', async () => {
     const user = userEvent.setup()
-    renderSetup()
+    await renderSetup()
     const addition = screen.getByRole('checkbox', { name: 'Addition' })
     addition.focus()
     await user.keyboard(' ')

@@ -1,4 +1,5 @@
-import { act, render, renderHook, screen } from '@testing-library/react'
+import { renderReady as render } from '../test/renderReady'
+import { act, renderHook, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestRouter as MemoryRouter } from '../test/TestRouter'
 import { describe, expect, it } from 'vitest'
@@ -39,8 +40,8 @@ const config: PracticeConfiguration = {
 function seed(patterns = [pattern]) {
   storageService.saveMistakePatterns(patterns)
 }
-function mount(path = '/practice/setup', state?: unknown) {
-  render(
+async function mount(path = '/practice/setup', state?: unknown) {
+  await render(
     <MemoryRouter initialEntries={[{ pathname: path, state }]}>
       <App />
     </MemoryRouter>,
@@ -210,8 +211,8 @@ describe('Phase 14 review outcomes', () => {
 })
 
 describe('Phase 14 review UI', () => {
-  it('disables and explains review without active matching patterns', () => {
-    mount()
+  it('disables and explains review without active matching patterns', async () => {
+    await mount()
     expect(
       screen.getByRole('radio', { name: 'Regular practice' }),
     ).toBeChecked()
@@ -224,7 +225,7 @@ describe('Phase 14 review UI', () => {
     const user = userEvent.setup()
     seed()
     storageService.saveSettings({ ...defaultSettings, masteryThreshold: 1 })
-    mount()
+    await mount()
     await user.click(screen.getByRole('checkbox', { name: 'Addition' }))
     expect(
       screen.getByText(/Active mistake patterns for these choices: 1/),
@@ -235,7 +236,7 @@ describe('Phase 14 review UI', () => {
     await user.click(screen.getByRole('button', { name: 'Flip Card' }))
     await user.click(screen.getByRole('button', { name: 'I Got It Right' }))
     expect(
-      screen.getByRole('heading', { name: 'Session summary' }),
+      await screen.findByRole('heading', { name: 'Session summary' }),
     ).toBeInTheDocument()
     expect(
       screen.getByText('Mistake-review questions completed', { selector: 'dt' })
@@ -245,17 +246,17 @@ describe('Phase 14 review UI', () => {
       screen.getByRole('button', { name: 'Practice Mistakes' }),
     ).toBeDisabled()
   })
-  it('redirects a stale review configuration when all matching patterns are mastered', () => {
+  it('redirects a stale review configuration when all matching patterns are mastered', async () => {
     seed([{ ...pattern, mastered: true }])
-    mount('/practice/session', { configuration: config })
+    await mount('/practice/session', { configuration: config })
     expect(
-      screen.getByRole('heading', { name: 'Practice setup' }),
+      await screen.findByRole('heading', { name: 'Practice setup' }),
     ).toBeInTheDocument()
   })
   it('enables the summary Practice Mistakes action for matching active patterns', async () => {
     const user = userEvent.setup()
     seed()
-    mount('/practice/summary', {
+    await mount('/practice/summary', {
       summary: {
         session: {
           ...config,
@@ -271,13 +272,13 @@ describe('Phase 14 review UI', () => {
     })
     await user.click(screen.getByRole('link', { name: 'Practice Mistakes' }))
     expect(
-      screen.getByRole('heading', { name: 'Practice session' }),
+      await screen.findByRole('heading', { name: 'Practice session' }),
     ).toBeInTheDocument()
     expect(screen.getByText('Question 1 of 5')).toBeInTheDocument()
   })
   it('saves a mastery threshold in Settings', async () => {
     const user = userEvent.setup()
-    mount('/settings')
+    await mount('/settings')
     const input = screen.getByRole('spinbutton', {
       name: 'Correct similar answers required for mastery',
     })

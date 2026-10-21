@@ -1,4 +1,5 @@
-import { render, screen, within } from '@testing-library/react'
+import { renderReady as render } from '../test/renderReady'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestRouter as MemoryRouter } from '../test/TestRouter'
 import { describe, expect, it } from 'vitest'
@@ -75,8 +76,8 @@ function seed() {
     ]),
   )
 }
-function mount() {
-  return render(
+async function mount() {
+  return await render(
     <MemoryRouter initialEntries={['/statistics']}>
       <App />
     </MemoryRouter>,
@@ -89,17 +90,17 @@ function value(label: string) {
 }
 
 describe('Phase 15 mistake statistics UI', () => {
-  it('shows a friendly empty state and zero totals', () => {
-    mount()
+  it('shows a friendly empty state and zero totals', async () => {
+    await mount()
     expect(screen.getByText('No mistake patterns yet.')).toBeInTheDocument()
     expect(value('Active mistake patterns')).toHaveTextContent('0')
     expect(value('Mastered mistake patterns')).toHaveTextContent('0')
     expect(value('Similar questions practiced')).toHaveTextContent('0')
     expect(value('Review questions answered correctly')).toHaveTextContent('0')
   })
-  it('shows counts, tied rankings, sorted active details, progress, and dates', () => {
+  it('shows counts, tied rankings, sorted active details, progress, and dates', async () => {
     seed()
-    mount()
+    await mount()
     expect(value('Active mistake patterns')).toHaveTextContent('2')
     expect(value('Mastered mistake patterns')).toHaveTextContent('1')
     expect(value('Similar questions practiced')).toHaveTextContent('2')
@@ -124,7 +125,7 @@ describe('Phase 15 mistake statistics UI', () => {
   it('shows mastered patterns separately when expanded', async () => {
     const user = userEvent.setup()
     seed()
-    mount()
+    await mount()
     const disclosure = screen.getByRole('button', {
       name: 'Mastered patterns (1)',
     })
@@ -139,7 +140,7 @@ describe('Phase 15 mistake statistics UI', () => {
   it('refreshes review totals on reset while retaining mistake patterns', async () => {
     const user = userEvent.setup()
     seed()
-    mount()
+    await mount()
     await user.click(screen.getByRole('button', { name: 'Reset Statistics' }))
     await user.click(
       screen.getByRole('button', { name: 'Yes, reset statistics' }),
@@ -149,11 +150,11 @@ describe('Phase 15 mistake statistics UI', () => {
     expect(value('Active mistake patterns')).toHaveTextContent('2')
     expect(value('Mastered mistake patterns')).toHaveTextContent('1')
   })
-  it('retains the same advanced statistics when reopened', () => {
+  it('retains the same advanced statistics when reopened', async () => {
     seed()
-    const view = mount()
+    const view = await mount()
     view.unmount()
-    mount()
+    await mount()
     expect(value('Active mistake patterns')).toHaveTextContent('2')
     expect(value('Similar questions practiced')).toHaveTextContent('2')
   })

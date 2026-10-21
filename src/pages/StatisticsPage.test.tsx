@@ -1,4 +1,5 @@
-import { render, screen, within } from '@testing-library/react'
+import { renderReady as render } from '../test/renderReady'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestRouter as MemoryRouter } from '../test/TestRouter'
 import { describe, expect, it } from 'vitest'
@@ -57,8 +58,8 @@ function seed() {
     completedAt: '2026-10-21T11:02:00Z',
   })
 }
-function mount() {
-  return render(
+async function mount() {
+  return await render(
     <MemoryRouter initialEntries={['/statistics']}>
       <App />
     </MemoryRouter>,
@@ -71,8 +72,8 @@ function total(region: string, label: string) {
 }
 
 describe('Phase 10 statistics page', () => {
-  it('renders empty states and all operation and difficulty cards', () => {
-    mount()
+  it('renders empty states and all operation and difficulty cards', async () => {
+    await mount()
     expect(screen.getByText(/No questions answered yet/)).toBeInTheDocument()
     expect(screen.getByText('No practice sessions yet.')).toBeInTheDocument()
     for (const title of [
@@ -90,9 +91,9 @@ describe('Phase 10 statistics page', () => {
       expect(total(title, 'Accuracy')).toHaveTextContent('0%')
     }
   })
-  it('loads saved totals, breakdowns, and recent sessions newest first', () => {
+  it('loads saved totals, breakdowns, and recent sessions newest first', async () => {
     seed()
-    mount()
+    await mount()
     expect(total('Overall totals', 'Attempted')).toHaveTextContent('2')
     expect(total('Overall totals', 'Correct')).toHaveTextContent('1')
     expect(total('Overall totals', 'Incorrect')).toHaveTextContent('1')
@@ -118,7 +119,7 @@ describe('Phase 10 statistics page', () => {
   it('does not clear data until confirmed and supports Escape, focus containment, and cancellation', async () => {
     const user = userEvent.setup()
     seed()
-    mount()
+    await mount()
     const reset = screen.getByRole('button', { name: 'Reset Statistics' })
     await user.click(reset)
     expect(screen.getByRole('alertdialog')).toBeInTheDocument()
@@ -148,7 +149,7 @@ describe('Phase 10 statistics page', () => {
     expect(storageService.loadMistakePatterns()).toHaveLength(1)
     localStorage.setItem('unrelated', 'keep')
     localStorage.setItem('mathPractice.statistics', '{"attempted":999}')
-    mount()
+    await mount()
     await user.click(screen.getByRole('button', { name: 'Reset Statistics' }))
     await user.click(
       screen.getByRole('button', { name: 'Yes, reset statistics' }),
@@ -168,11 +169,11 @@ describe('Phase 10 statistics page', () => {
     )
     expect(localStorage.getItem('unrelated')).toBe('keep')
   })
-  it('retains statistics after leaving and reopening the page', () => {
+  it('retains statistics after leaving and reopening the page', async () => {
     seed()
-    const view = mount()
+    const view = await mount()
     view.unmount()
-    mount()
+    await mount()
     expect(total('Overall totals', 'Accuracy')).toHaveTextContent('50%')
   })
 })

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { memo, useMemo, useState } from 'react'
 import type { MistakePattern } from '../../types/mistake'
 import type { PracticeAttempt } from '../../types/session'
 import { calculateMistakeStatistics } from '../../services/mistakeStatisticsService'
@@ -70,7 +70,10 @@ function MistakeStatistics({
   attempts: PracticeAttempt[]
   threshold: number
 }) {
-  const statistics = calculateMistakeStatistics(patterns, attempts)
+  const statistics = useMemo(
+    () => calculateMistakeStatistics(patterns, attempts),
+    [patterns, attempts],
+  )
   const [showMastered, setShowMastered] = useState(false)
   return (
     <section aria-labelledby="mistake-statistics-heading">
@@ -152,4 +155,4 @@ function MistakeStatistics({
     </section>
   )
 }
-export default MistakeStatistics
+export default memo(MistakeStatistics)

@@ -1,4 +1,5 @@
-import { render, screen } from '@testing-library/react'
+import { renderReady as render } from '../test/renderReady'
+import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestRouter as MemoryRouter } from '../test/TestRouter'
 import { describe, expect, it, vi } from 'vitest'
@@ -12,8 +13,8 @@ import { playFeedbackSound } from '../utils/sound'
 
 vi.mock('../utils/sound', () => ({ playFeedbackSound: vi.fn() }))
 
-function mount(path = '/settings') {
-  return render(
+async function mount(path = '/settings') {
+  return await render(
     <MemoryRouter initialEntries={[path]}>
       <App />
     </MemoryRouter>,
@@ -23,7 +24,7 @@ function mount(path = '/settings') {
 describe('Phase 11 settings', () => {
   it('loads application defaults and saves every exposed preference', async () => {
     const user = userEvent.setup()
-    const view = mount()
+    const view = await mount()
     expect(
       screen.getByRole('checkbox', { name: 'Sound effects' }),
     ).not.toBeChecked()
@@ -54,7 +55,7 @@ describe('Phase 11 settings', () => {
       defaultSessionLength: 20,
     })
     view.unmount()
-    mount()
+    await mount()
     expect(
       screen.getByRole('checkbox', { name: 'Sound effects' }),
     ).toBeChecked()
@@ -69,7 +70,7 @@ describe('Phase 11 settings', () => {
       defaultDifficulty: 2,
       defaultSessionLength: 'continuous',
     })
-    mount('/practice/setup')
+    await mount('/practice/setup')
     expect(screen.getByRole('checkbox', { name: 'Addition' })).toBeChecked()
     expect(screen.getByRole('checkbox', { name: 'Division' })).toBeChecked()
     expect(screen.getByRole('radio', { name: 'Level 2: Easy' })).toBeChecked()
@@ -91,10 +92,10 @@ describe('Phase 11 settings', () => {
 
   it('does not save a draft until Save Settings is selected', async () => {
     const user = userEvent.setup()
-    const view = mount()
+    const view = await mount()
     await user.click(screen.getByRole('checkbox', { name: 'Sound effects' }))
     view.unmount()
-    mount()
+    await mount()
     expect(
       screen.getByRole('checkbox', { name: 'Sound effects' }),
     ).not.toBeChecked()
@@ -108,7 +109,7 @@ describe('Phase 11 settings', () => {
     localStorage.setItem('mathPractice.sessions', '[]')
     localStorage.setItem('mathPractice.statistics', '{}')
     localStorage.setItem('unrelated', 'keep')
-    mount()
+    await mount()
     await user.click(
       screen.getByRole('button', { name: 'Clear All Application Data' }),
     )
@@ -130,7 +131,7 @@ describe('Phase 11 settings', () => {
       screen.getByRole('button', { name: 'Yes, clear all application data' }),
     )
     expect(
-      screen.getByRole('heading', { name: 'Welcome to Math Practice!' }),
+      await screen.findByRole('heading', { name: 'Welcome to Math Practice!' }),
     ).toBeInTheDocument()
     for (const key of [
       'attempts',
@@ -149,7 +150,7 @@ describe('Phase 11 settings', () => {
 
   it('stays on Settings and reports deletion failures', async () => {
     const user = userEvent.setup()
-    mount()
+    await mount()
     const failure = vi
       .spyOn(Storage.prototype, 'removeItem')
       .mockImplementation(() => {
@@ -163,7 +164,7 @@ describe('Phase 11 settings', () => {
         screen.getByRole('button', { name: 'Yes, clear all application data' }),
       )
       expect(
-        screen.getByRole('heading', { name: 'Settings' }),
+        await screen.findByRole('heading', { name: 'Settings' }),
       ).toBeInTheDocument()
       expect(screen.getByRole('status')).toHaveTextContent(
         'could not be erased',
@@ -178,7 +179,7 @@ describe('Phase 11 settings', () => {
     async (showExplanations) => {
       const user = userEvent.setup()
       storageService.saveSettings({ ...defaultSettings, showExplanations })
-      mount('/practice/card-preview')
+      await mount('/practice/card-preview')
       await user.click(screen.getByRole('button', { name: 'Answer 56' }))
       await user.click(screen.getByRole('button', { name: 'Flip Card' }))
       if (showExplanations)
@@ -196,7 +197,7 @@ describe('Phase 11 settings', () => {
       vi.mocked(playFeedbackSound).mockClear()
       const user = userEvent.setup()
       storageService.saveSettings({ ...defaultSettings, soundEnabled })
-      mount('/practice/card-preview')
+      await mount('/practice/card-preview')
       await user.click(screen.getByRole('button', { name: 'Answer 56' }))
       await user.click(screen.getByRole('button', { name: 'Flip Card' }))
       await user.click(screen.getByRole('button', { name: 'I Got It Right' }))

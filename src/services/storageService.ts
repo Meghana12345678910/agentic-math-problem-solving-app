@@ -198,6 +198,7 @@ export function createStorageService(
   getStorage: () => Storage = () => window.localStorage,
 ) {
   const memory = new Map<string, unknown>()
+  const serialized = new Map<string, string>()
   const pending = new Set<string>()
   let initialized = false
   const listeners = new Set<() => void>()
@@ -229,11 +230,19 @@ export function createStorageService(
       const cached = memory.get(key)
       return valid(cached) ? cached : fallback
     }
-    if (raw === null) return fallback
+    if (raw === null) {
+      serialized.delete(key)
+      memory.delete(key)
+      return fallback
+    }
+    // Still read the browser value so edits from another tab invalidate the cache.
+    if (serialized.get(key) === raw && memory.has(key))
+      return memory.get(key) as T
     try {
       const value: unknown = JSON.parse(raw)
       if (!valid(value)) throw new Error('Invalid stored data')
       memory.set(key, value)
+      serialized.set(key, raw)
       return value
     } catch {
       // Repair this category only. A blocked write still uses the safe value in memory.
@@ -252,7 +261,10 @@ export function createStorageService(
     pending.add(key)
     if (futureVersion) return false
     try {
-      getStorage().setItem(key, JSON.stringify(value))
+      const raw = JSON.stringify(value)
+      const storage = getStorage()
+      if (storage.getItem(key) !== raw) storage.setItem(key, raw)
+      serialized.set(key, raw)
       pending.delete(key)
       return true
     } catch {
@@ -422,6 +434,7 @@ export function createStorageService(
     if (futureVersion) return false
     try {
       getStorage().removeItem(key)
+      serialized.delete(key)
       pending.delete(key)
       return true
     } catch {
@@ -448,6 +461,7 @@ export function createStorageService(
       pending.add(key)
       try {
         getStorage().removeItem(key)
+        serialized.delete(key)
         pending.delete(key)
       } catch {
         saved = false
@@ -456,6 +470,36 @@ export function createStorageService(
     }
     const versionSaved = write('version', { version: schemaVersion })
     return saved && versionSaved
+  }
+  /** Estimate UTF-16 key/value bytes for this app only; browser quotas vary. */
+  function measureStorageUsage() {
+    try {
+      const storage = getStorage()
+      const byCategory: Record<string, number> = {}
+      for (const name of [
+        'version',
+        'settings',
+        'sessions',
+        'attempts',
+        'mistakePatterns',
+        'activeSession',
+        'statistics',
+      ]) {
+        const key = prefix + name
+        const raw = storage.getItem(key)
+        byCategory[name] = raw === null ? 0 : (key.length + raw.length) * 2
+      }
+      return {
+        totalBytes: Object.values(byCategory).reduce(
+          (sum, bytes) => sum + bytes,
+          0,
+        ),
+        byCategory,
+      }
+    } catch {
+      warn()
+      return null
+    }
   }
   function resetStatistics() {
     const results = [
@@ -467,6 +511,7 @@ export function createStorageService(
     return results.every(Boolean)
   }
   return {
+    measureStorageUsage,
     loadActiveSession,
     saveActiveSession,
     clearActiveSession,

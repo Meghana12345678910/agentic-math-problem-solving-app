@@ -1,5 +1,6 @@
 /// <reference types="node" />
-import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { renderReady as render } from './test/renderReady'
+import { act, cleanup, fireEvent, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestRouter as MemoryRouter } from './test/TestRouter'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -22,8 +23,8 @@ const question: Question = {
   difficulty: 2,
   source: 'regular',
 }
-const card = () =>
-  render(
+const card = async () =>
+  await render(
     <QuestionCard question={question} questionNumber={1} totalQuestions={5} />,
   )
 afterEach(() => {
@@ -36,7 +37,7 @@ describe('Phase 16 keyboard and announcements', () => {
     'selects answer %s using its advertised number shortcut',
     async (key) => {
       const user = userEvent.setup()
-      card()
+      await card()
       await user.keyboard(key.toString())
       const button = screen.getByRole('button', {
         name: 'Answer ' + question.choices[key - 1],
@@ -48,8 +49,8 @@ describe('Phase 16 keyboard and announcements', () => {
   )
   it.each(['input', 'textarea', 'select', 'editable', 'textbox'])(
     'leaves numeric typing in %s alone',
-    (kind) => {
-      card()
+    async (kind) => {
+      await card()
       const target = document.createElement(
         ['editable', 'textbox'].includes(kind) ? 'div' : kind,
       )
@@ -65,17 +66,17 @@ describe('Phase 16 keyboard and announcements', () => {
     { altKey: true },
     { metaKey: true },
     { isComposing: true },
-  ])('ignores modified/composing shortcuts %j', (flags) => {
-    card()
+  ])('ignores modified/composing shortcuts %j', async (flags) => {
+    await card()
     fireEvent.keyDown(
-      screen.getByRole('heading', { name: '7 times 8 equals what?' }),
+      await screen.findByRole('heading', { name: '7 times 8 equals what?' }),
       { key: '1', ...flags },
     )
     expect(screen.getByRole('button', { name: 'Flip Card' })).toBeDisabled()
   })
   it('announces changed questions and progress without exposing both faces', async () => {
     const user = userEvent.setup()
-    const view = card()
+    const view = await card()
     expect(screen.getByText('Question 1 of 5')).toHaveAttribute(
       'aria-live',
       'polite',
@@ -90,7 +91,7 @@ describe('Phase 16 keyboard and announcements', () => {
       'Correct answer: 56. Your answer: 56.',
     )
     expect(
-      screen.getByRole('heading', { name: 'Answer revealed' }),
+      await screen.findByRole('heading', { name: 'Answer revealed' }),
     ).toHaveFocus()
     expect(document.querySelector('.card-front')).toHaveAttribute('inert')
     expect(
@@ -114,11 +115,11 @@ describe('Phase 16 keyboard and announcements', () => {
       'true',
     )
     expect(
-      screen.getByRole('heading', { name: '8 times 7 equals what?' }),
+      await screen.findByRole('heading', { name: '8 times 7 equals what?' }),
     ).toHaveFocus()
   })
-  it('announces progress totals accessibly', () => {
-    const view = render(<ProgressBar attempted={1} total={5} />)
+  it('announces progress totals accessibly', async () => {
+    const view = await render(<ProgressBar attempted={1} total={5} />)
     expect(
       screen.getByText('Session progress: 1 of 5 completed'),
     ).toHaveAttribute('aria-live', 'polite')
@@ -133,7 +134,7 @@ describe('Phase 16 keyboard and announcements', () => {
   })
   it('moves focus on navigation and keeps preference controls usable with the keyboard', async () => {
     const user = userEvent.setup()
-    render(
+    await render(
       <MemoryRouter>
         <App />
       </MemoryRouter>,
@@ -145,7 +146,10 @@ describe('Phase 16 keyboard and announcements', () => {
     await user.click(
       screen.getByRole('navigation').querySelector('a[href="/settings"]')!,
     )
-    expect(screen.getByRole('heading', { name: 'Settings' })).toHaveFocus()
+    await screen.findByRole('heading', { name: 'Settings', level: 1 })
+    expect(
+      await screen.findByRole('heading', { name: 'Settings' }),
+    ).toHaveFocus()
     await user.tab()
     const sound = screen.getByRole('checkbox', { name: 'Sound effects' })
     expect(sound).toHaveFocus()
@@ -158,8 +162,8 @@ describe('Phase 16 keyboard and announcements', () => {
     '/settings',
     '/statistics',
     '/practice/card-preview',
-  ])('gives visible controls accessible names on %s', (path) => {
-    render(
+  ])('gives visible controls accessible names on %s', async (path) => {
+    await render(
       <MemoryRouter initialEntries={[path]}>
         <App />
       </MemoryRouter>,
@@ -193,7 +197,7 @@ describe('Phase 16 reduced motion', () => {
       })),
     )
     const user = userEvent.setup()
-    card()
+    await card()
     const region = screen.getByRole('region', { name: 'Math question card' })
     expect(region).toHaveAttribute('data-animations', 'false')
     expect(
@@ -205,7 +209,7 @@ describe('Phase 16 reduced motion', () => {
     await user.keyboard('3')
     await user.click(screen.getByRole('button', { name: 'Flip Card' }))
     expect(
-      screen.getByRole('heading', { name: 'Answer revealed' }),
+      await screen.findByRole('heading', { name: 'Answer revealed' }),
     ).toBeInTheDocument()
     act(() => {
       matches = false

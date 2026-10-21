@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { renderReady as render } from '../test/renderReady'
+import { fireEvent, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { useLocation } from 'react-router-dom'
 import App from '../App'
@@ -21,7 +22,7 @@ function BoundaryRoutes() {
 describe('Phase 19 friendly errors', () => {
   it('explains a missing session and offers home without losing setup controls', async () => {
     storageService.clearActiveSession()
-    render(
+    await render(
       <TestRouter initialEntries={['/practice/session']}>
         <App />
       </TestRouter>,
@@ -30,7 +31,7 @@ describe('Phase 19 friendly errors', () => {
       await screen.findByText(/could not find a practice session/),
     ).toBeInTheDocument()
     expect(
-      screen.getByRole('heading', { name: 'Practice setup' }),
+      await screen.findByRole('heading', { name: 'Practice setup' }),
     ).toBeInTheDocument()
     fireEvent.click(screen.getByRole('link', { name: 'Return Home' }))
     expect(
@@ -39,7 +40,7 @@ describe('Phase 19 friendly errors', () => {
   })
   it('catches unexpected rendering errors and recovers on navigation without exposing details', async () => {
     const log = vi.spyOn(console, 'error').mockImplementation(() => {})
-    render(
+    await render(
       <TestRouter initialEntries={['/broken']}>
         <BoundaryRoutes />
       </TestRouter>,

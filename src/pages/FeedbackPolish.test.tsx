@@ -1,4 +1,5 @@
-import { render, screen } from '@testing-library/react'
+import { renderReady as render } from '../test/renderReady'
+import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestRouter as MemoryRouter } from '../test/TestRouter'
 import { describe, expect, it, vi } from 'vitest'
@@ -25,8 +26,8 @@ const question: Question = {
   difficulty: 2,
   source: 'regular',
 }
-function card() {
-  return render(
+async function card() {
+  return await render(
     <QuestionCard question={question} questionNumber={1} totalQuestions={5} />,
   )
 }
@@ -45,7 +46,7 @@ describe('Phase 17 feedback polish', () => {
   it.each([true, false])(
     'shows brief encouragement after a self-reported result of %s',
     async (correct) => {
-      const view = card()
+      const view = await card()
       expect(document.querySelector('.feedback-message')).toBeEmptyDOMElement()
       await report(correct)
       const message = document.querySelector('.feedback-message')!
@@ -77,7 +78,7 @@ describe('Phase 17 feedback polish', () => {
       soundEnabled: true,
       feedbackEffectsEnabled: false,
     })
-    card()
+    await card()
     await report(true)
     expect(document.querySelector('.feedback-message')).toBeEmptyDOMElement()
     expect(playFeedbackSound).not.toHaveBeenCalled()
@@ -87,13 +88,13 @@ describe('Phase 17 feedback polish', () => {
   })
   it('saves and restores the option from Settings', async () => {
     const user = userEvent.setup()
-    const mount = () =>
-      render(
+    const mount = async () =>
+      await render(
         <MemoryRouter initialEntries={['/settings']}>
           <App />
         </MemoryRouter>,
       )
-    const view = mount()
+    const view = await mount()
     expect(
       screen.getByRole('checkbox', { name: 'Encouraging feedback effects' }),
     ).toBeChecked()
@@ -105,7 +106,7 @@ describe('Phase 17 feedback polish', () => {
       false,
     )
     view.unmount()
-    mount()
+    await mount()
     expect(
       screen.getByRole('checkbox', { name: 'Encouraging feedback effects' }),
     ).not.toBeChecked()
@@ -118,7 +119,7 @@ describe('Phase 17 feedback polish', () => {
     expect(isSettings({ ...legacy, feedbackEffectsEnabled: 'invalid' })).toBe(
       false,
     )
-    card()
+    await card()
     await report(false)
     expect(
       document.querySelector('.feedback-message'),

@@ -1,4 +1,5 @@
-import { act, render, renderHook, screen } from '@testing-library/react'
+import { renderReady as render } from '../test/renderReady'
+import { act, renderHook, screen } from '@testing-library/react'
 import { TestRouter as MemoryRouter } from '../test/TestRouter'
 import { describe, expect, it, vi } from 'vitest'
 import { updateMistakePatterns } from './mistakeService'
@@ -239,7 +240,7 @@ describe('Phase 12 mistake tracking', () => {
   })
   it('validates saved patterns at startup without opening a practice session', async () => {
     localStorage.setItem('mathPractice.mistakePatterns', JSON.stringify([{}]))
-    render(
+    await render(
       <MemoryRouter initialEntries={['/']}>
         <App />
       </MemoryRouter>,

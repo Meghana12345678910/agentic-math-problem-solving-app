@@ -1,4 +1,5 @@
-import { render, screen, within } from '@testing-library/react'
+import { renderReady as render } from '../test/renderReady'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import App from '../App'
@@ -12,8 +13,8 @@ import { isValidQuestion } from '../services/questionGenerator'
 
 beforeEach(() => storageService.clearActiveSession())
 afterEach(() => vi.restoreAllMocks())
-const mount = (path = '/') =>
-  render(
+const mount = async (path = '/') =>
+  await render(
     <TestRouter initialEntries={[path]}>
       <App />
     </TestRouter>,
@@ -51,7 +52,7 @@ describe('Phase 20 complete application flows', () => {
     'finishes an addition session entirely by keyboard with all self-reports %s',
     async (correct) => {
       const user = userEvent.setup()
-      mount()
+      await mount()
       await tabTo(user, screen.getByRole('link', { name: 'Start Practice' }))
       await user.keyboard('{Enter}')
       await tabTo(user, screen.getByRole('checkbox', { name: 'Addition' }))
@@ -66,13 +67,13 @@ describe('Phase 20 complete application flows', () => {
           screen.getByText(`Question ${index + 1} of 5`),
         ).toBeInTheDocument()
         expect(
-          screen.getByRole('heading', { name: /equals what/ }),
+          await screen.findByRole('heading', { name: /equals what/ }),
         ).toHaveFocus()
         await user.keyboard('1')
         await tabTo(user, screen.getByRole('button', { name: 'Flip Card' }))
         await user.keyboard('{Enter}')
         expect(
-          screen.getByRole('heading', { name: 'Answer revealed' }),
+          await screen.findByRole('heading', { name: 'Answer revealed' }),
         ).toHaveFocus()
         await tabTo(
           user,
@@ -83,7 +84,7 @@ describe('Phase 20 complete application flows', () => {
         await user.keyboard(' ')
       }
       expect(
-        screen.getByRole('heading', { name: 'Session summary' }),
+        await screen.findByRole('heading', { name: 'Session summary' }),
       ).toHaveFocus()
       expect(screen.getByText(correct ? '100%' : '0%')).toBeInTheDocument()
       const fresh = createStorageService()
@@ -119,7 +120,7 @@ describe('Phase 20 complete application flows', () => {
       return seed / 4294967296
     })
     const user = userEvent.setup()
-    mount('/practice/setup')
+    await mount('/practice/setup')
     await user.click(
       screen.getByRole('button', { name: 'Select all operations' }),
     )
@@ -146,6 +147,7 @@ describe('Phase 20 complete application flows', () => {
     ])
     expect(screen.getByText('50%')).toBeInTheDocument()
     await user.click(screen.getByRole('link', { name: 'View Statistics' }))
+    await screen.findByRole('heading', { name: 'Statistics', level: 1 })
     expect(total('Attempted')).toHaveTextContent('20')
     expect(total('Correct')).toHaveTextContent('10')
     expect(total('Incorrect')).toHaveTextContent('10')
@@ -158,7 +160,7 @@ describe('Phase 20 complete application flows', () => {
   it('creates a mistake, reviews related questions to mastery, and resets history while preserving mastery', async () => {
     storageService.saveSettings({ ...defaultSettings, soundEnabled: true })
     const user = userEvent.setup()
-    mount()
+    await mount()
     await start(user)
     await answer(user, false)
     for (let index = 0; index < 4; index++) await answer(user, true)
@@ -182,7 +184,7 @@ describe('Phase 20 complete application flows', () => {
       await answer(user, true)
     }
     expect(
-      screen.getByRole('heading', { name: 'Session summary' }),
+      await screen.findByRole('heading', { name: 'Session summary' }),
     ).toBeInTheDocument()
     expect(
       screen.getByRole('button', { name: 'Practice Mistakes' }),
@@ -198,6 +200,7 @@ describe('Phase 20 complete application flows', () => {
         .filter((a) => a.source === 'mistake-review'),
     ).toHaveLength(3)
     await user.click(screen.getByRole('link', { name: 'View Statistics' }))
+    await screen.findByRole('heading', { name: 'Statistics', level: 1 })
     expect(total('Attempted')).toHaveTextContent('8')
     await user.click(screen.getByRole('button', { name: 'Reset Statistics' }))
     await user.click(screen.getByRole('button', { name: 'Cancel' }))
@@ -216,7 +219,7 @@ describe('Phase 20 complete application flows', () => {
 
   it('continues beyond twenty questions until explicitly ended', async () => {
     const user = userEvent.setup()
-    mount()
+    await mount()
     await start(user, 'Continuous practice')
     for (let index = 0; index < 21; index++) await answer(user, true)
     expect(screen.getByText(/Question 22/)).toBeInTheDocument()
@@ -227,7 +230,7 @@ describe('Phase 20 complete application flows', () => {
     await user.click(screen.getByRole('button', { name: 'End Session' }))
     await user.click(screen.getByRole('button', { name: 'Yes, end session' }))
     expect(
-      screen.getByRole('heading', { name: 'Session summary' }),
+      await screen.findByRole('heading', { name: 'Session summary' }),
     ).toBeInTheDocument()
     expect(createStorageService().loadSessions()[0]).toMatchObject({
       attempted: 21,
@@ -238,7 +241,7 @@ describe('Phase 20 complete application flows', () => {
 
   it('finishes after a simulated refresh without losing or duplicating completed answers', async () => {
     const user = userEvent.setup()
-    const view = mount()
+    const view = await mount()
     await start(user)
     await answer(user, false)
     await answer(user, true)
@@ -247,10 +250,10 @@ describe('Phase 20 complete application flows', () => {
     const saved = createStorageService().loadActiveSession()!
     view.unmount()
     // Remount without history state, using the serialized snapshot as a refresh would.
-    mount('/practice/session')
+    await mount('/practice/session')
     expect(screen.getByText('Question 3 of 5')).toBeInTheDocument()
     expect(
-      screen.getByRole('heading', { name: 'Answer revealed' }),
+      await screen.findByRole('heading', { name: 'Answer revealed' }),
     ).toHaveFocus()
     expect(createStorageService().loadActiveSession()!.question.id).toBe(
       saved.question.id,

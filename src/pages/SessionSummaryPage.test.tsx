@@ -1,4 +1,5 @@
-import { act, render, renderHook, screen } from '@testing-library/react'
+import { renderReady as render } from '../test/renderReady'
+import { act, renderHook, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestRouter as MemoryRouter } from '../test/TestRouter'
 import { describe, expect, it } from 'vitest'
@@ -20,8 +21,8 @@ const summary: SessionSummary = {
   },
   mistakeReviewCount: 2,
 }
-function renderSummary(value: unknown = summary) {
-  render(
+async function renderSummary(value: unknown = summary) {
+  await render(
     <MemoryRouter
       initialEntries={[
         { pathname: '/practice/summary', state: { summary: value } },
@@ -36,8 +37,8 @@ function valueFor(label: string) {
 }
 
 describe('Phase 8 summary', () => {
-  it('shows totals, accuracy, configuration, review count, and completion time', () => {
-    renderSummary()
+  it('shows totals, accuracy, configuration, review count, and completion time', async () => {
+    await renderSummary()
     expect(valueFor('Questions attempted')).toHaveTextContent('5')
     expect(valueFor('Correct answers')).toHaveTextContent('3')
     expect(valueFor('Incorrect answers')).toHaveTextContent('2')
@@ -56,7 +57,7 @@ describe('Phase 8 summary', () => {
       summary.session.completedAt,
     )
     expect(
-      screen.getByRole('heading', { name: 'Session summary' }),
+      await screen.findByRole('heading', { name: 'Session summary' }),
     ).toHaveFocus()
     expect(
       screen.getByRole('button', { name: 'Practice Mistakes' }),
@@ -75,8 +76,8 @@ describe('Phase 8 summary', () => {
     [3, 2, 67],
   ])(
     'calculates accuracy for %s attempts and %s correct',
-    (attempted, correct, accuracy) => {
-      renderSummary({
+    async (attempted, correct, accuracy) => {
+      await renderSummary({
         session: {
           ...summary.session,
           sessionLength: 'continuous',
@@ -92,8 +93,8 @@ describe('Phase 8 summary', () => {
 
   it.each([null, {}, { session: {} }])(
     'handles missing summary %j',
-    (value) => {
-      renderSummary(value)
+    async (value) => {
+      await renderSummary(value)
       expect(
         screen.getByText('No completed session is available yet.'),
       ).toBeInTheDocument()
@@ -105,7 +106,7 @@ describe('Phase 8 summary', () => {
 
   it('starts a fresh session using the previous configuration', async () => {
     const user = userEvent.setup()
-    renderSummary()
+    await renderSummary()
     await user.click(screen.getByRole('link', { name: 'Practice Again' }))
     expect(screen.getByText('Question 1 of 5')).toBeInTheDocument()
     expect(
@@ -121,9 +122,11 @@ describe('Phase 8 summary', () => {
     ['Return Home', 'Welcome to Math Practice!'],
   ])('routes %s to its destination', async (action, heading) => {
     const user = userEvent.setup()
-    renderSummary()
+    await renderSummary()
     await user.click(screen.getByRole('link', { name: action }))
-    expect(screen.getByRole('heading', { name: heading })).toBeInTheDocument()
+    expect(
+      await screen.findByRole('heading', { name: heading }),
+    ).toBeInTheDocument()
   })
 
   it('sets a stable completion timestamp and stops recording at the fixed limit', () => {

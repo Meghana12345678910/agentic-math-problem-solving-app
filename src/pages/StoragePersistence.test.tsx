@@ -1,4 +1,5 @@
-import { render, screen } from '@testing-library/react'
+import { renderReady as render } from '../test/renderReady'
+import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestRouter as MemoryRouter } from '../test/TestRouter'
 import { expect, it, vi } from 'vitest'
@@ -6,20 +7,20 @@ import App from '../App'
 
 it('restores the animation preference after unmounting and reopening the card', async () => {
   const user = userEvent.setup()
-  const mount = () =>
-    render(
+  const mount = async () =>
+    await render(
       <MemoryRouter initialEntries={['/practice/card-preview']}>
         <App />
       </MemoryRouter>,
     )
-  const view = mount()
+  const view = await mount()
   await user.click(screen.getByRole('checkbox', { name: 'Animate card flip' }))
   expect(
     JSON.parse(localStorage.getItem('mathPractice.settings')!)
       .animationsEnabled,
   ).toBe(false)
   view.unmount()
-  mount()
+  await mount()
   expect(
     screen.getByRole('checkbox', { name: 'Animate card flip' }),
   ).not.toBeChecked()
@@ -33,7 +34,7 @@ it('warns when storage is full while allowing an answer to advance practice', as
       throw new DOMException('Full', 'QuotaExceededError')
     })
   try {
-    render(
+    await render(
       <MemoryRouter
         initialEntries={[
           {

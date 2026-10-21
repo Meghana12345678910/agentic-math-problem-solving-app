@@ -1,6 +1,7 @@
 /// <reference types="node" />
+import { renderReady as render } from './test/renderReady'
 import { readFileSync } from 'node:fs'
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import axe from 'axe-core'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -50,8 +51,8 @@ const configuration = {
   difficulty: 1,
   sessionLength: 5,
 }
-function mount(path: string, state?: unknown) {
-  render(
+async function mount(path: string, state?: unknown) {
+  await render(
     <TestRouter initialEntries={[{ pathname: path, state }]}>
       <App />
     </TestRouter>,
@@ -70,14 +71,14 @@ describe('Phase 20 automated accessibility audit', () => {
   ])(
     'has no detectable WCAG or best-practice violations on %s',
     async (path) => {
-      mount(path)
+      await mount(path)
       await audit()
     },
     15000,
   )
   it('audits the card front, revealed answer, and leave confirmation', async () => {
     const user = userEvent.setup()
-    mount('/practice/session', { configuration })
+    await mount('/practice/session', { configuration })
     await audit()
     await user.click(screen.getAllByRole('button', { name: /^Answer / })[0])
     await user.click(screen.getByRole('button', { name: 'Flip Card' }))
@@ -103,14 +104,14 @@ describe('Phase 20 automated accessibility audit', () => {
       source: 'regular',
       attemptedAt: '2026-10-21T10:01:00Z',
     })
-    mount('/statistics')
+    await mount('/statistics')
     await audit()
     const user = userEvent.setup()
     await user.click(screen.getByRole('button', { name: 'Reset Statistics' }))
     await audit()
   }, 15000)
   it('audits a completed session summary', async () => {
-    mount('/practice/summary', {
+    await mount('/practice/summary', {
       summary: {
         session: {
           ...configuration,

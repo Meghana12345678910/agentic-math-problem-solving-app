@@ -1,11 +1,12 @@
-import { render, screen, within } from '@testing-library/react'
+import { renderReady as render } from './test/renderReady'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestRouter as MemoryRouter } from './test/TestRouter'
 import { describe, expect, it } from 'vitest'
 import App from './App'
 
-function renderApp(path = '/') {
-  return render(
+async function renderApp(path = '/') {
+  return await render(
     <MemoryRouter initialEntries={[path]}>
       <App />
     </MemoryRouter>,
@@ -13,8 +14,8 @@ function renderApp(path = '/') {
 }
 
 describe('Phase 2 interface', () => {
-  it('shows the welcome message and three home actions', () => {
-    renderApp()
+  it('shows the welcome message and three home actions', async () => {
+    await renderApp()
     const main = within(screen.getByRole('main'))
     expect(
       main.getByRole('heading', {
@@ -33,12 +34,12 @@ describe('Phase 2 interface', () => {
     ['Settings', 'Settings'],
   ])('navigates from %s to its page', async (action, heading) => {
     const user = userEvent.setup()
-    renderApp()
+    await renderApp()
     await user.click(
       within(screen.getByRole('main')).getByRole('link', { name: action }),
     )
     expect(
-      screen.getByRole('heading', { level: 1, name: heading }),
+      await screen.findByRole('heading', { level: 1, name: heading }),
     ).toBeInTheDocument()
   })
 
@@ -49,10 +50,10 @@ describe('Phase 2 interface', () => {
     ['/practice/summary', 'Session summary'],
     ['/statistics', 'Statistics'],
     ['/settings', 'Settings'],
-  ])('renders %s with shared navigation', (path, heading) => {
-    renderApp(path)
+  ])('renders %s with shared navigation', async (path, heading) => {
+    await renderApp(path)
     expect(
-      screen.getByRole('heading', { level: 1, name: heading }),
+      await screen.findByRole('heading', { level: 1, name: heading }),
     ).toBeInTheDocument()
     expect(screen.getByRole('banner')).toBeInTheDocument()
     expect(
@@ -62,13 +63,14 @@ describe('Phase 2 interface', () => {
 
   it('marks the current navigation link', async () => {
     const user = userEvent.setup()
-    renderApp()
+    await renderApp()
     const nav = within(screen.getByRole('navigation'))
     expect(nav.getByRole('link', { name: 'Home' })).toHaveAttribute(
       'aria-current',
       'page',
     )
     await user.click(nav.getByRole('link', { name: 'Statistics' }))
+    await screen.findByRole('heading', { name: 'Statistics', level: 1 })
     expect(nav.getByRole('link', { name: 'Statistics' })).toHaveAttribute(
       'aria-current',
       'page',
@@ -80,19 +82,19 @@ describe('Phase 2 interface', () => {
 
   it('provides an unknown-route fallback and return home', async () => {
     const user = userEvent.setup()
-    renderApp('/missing')
+    await renderApp('/missing')
     expect(
-      screen.getByRole('heading', { name: 'Page not found' }),
+      await screen.findByRole('heading', { name: 'Page not found' }),
     ).toBeInTheDocument()
     await user.click(screen.getByRole('link', { name: 'Return Home' }))
     expect(
-      screen.getByRole('heading', { name: 'Welcome to Math Practice!' }),
+      await screen.findByRole('heading', { name: 'Welcome to Math Practice!' }),
     ).toBeInTheDocument()
   })
 
   it('supports keyboard navigation to the main practice action', async () => {
     const user = userEvent.setup()
-    renderApp()
+    await renderApp()
     await user.tab()
     expect(
       screen.getByRole('link', { name: 'Skip to main content' }),
@@ -102,7 +104,7 @@ describe('Phase 2 interface', () => {
     expect(screen.getByRole('link', { name: 'Start Practice' })).toHaveFocus()
     await user.keyboard('{Enter}')
     expect(
-      screen.getByRole('heading', { name: 'Practice setup' }),
+      await screen.findByRole('heading', { name: 'Practice setup' }),
     ).toBeInTheDocument()
   })
 })
