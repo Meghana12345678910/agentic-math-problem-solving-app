@@ -44,3 +44,29 @@ export function updateMistakePatterns(
       )
     : [...patterns, updated]
 }
+
+export function updateReviewPattern(
+  patterns: readonly MistakePattern[],
+  attempt: PracticeAttempt,
+  threshold: number,
+): MistakePattern[] {
+  if (!Number.isInteger(threshold) || threshold < 1)
+    throw new RangeError('Mastery threshold must be a positive integer.')
+  return patterns.map((pattern) => {
+    if (pattern.id !== attempt.mistakePatternId) return pattern
+    if (!attempt.selfReportedCorrect)
+      return {
+        ...pattern,
+        incorrectCount: pattern.incorrectCount + 1,
+        similarCorrectCount: 0,
+        lastIncorrectAt: attempt.attemptedAt,
+        mastered: false,
+      }
+    const similarCorrectCount = pattern.similarCorrectCount + 1
+    return {
+      ...pattern,
+      similarCorrectCount,
+      mastered: similarCorrectCount >= threshold,
+    }
+  })
+}

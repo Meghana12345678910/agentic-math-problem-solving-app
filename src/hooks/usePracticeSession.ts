@@ -1,3 +1,4 @@
+import { createReviewGenerator } from '../services/reviewService'
 import { storageService } from '../services/storageService'
 import { useEffect, useRef, useState } from 'react'
 import type { PracticeConfiguration } from '../types/practiceConfiguration'
@@ -37,19 +38,29 @@ export function nextQuestion(
     : low
 }
 
-function createSession(config: PracticeConfiguration): SessionState {
+function createSession(
+  config: PracticeConfiguration,
+  review: ReturnType<typeof createReviewGenerator>,
+): SessionState {
+  const question =
+    config.mode === 'mistake-review'
+      ? review()
+      : generateQuestion(config.operations, config.difficulty)
+  if (!question)
+    throw new Error('No active mistakes match these practice choices.')
   return {
     session: {
       id: createId(),
       startedAt: new Date().toISOString(),
       operations: [...config.operations],
+      mode: config.mode ?? 'regular',
       difficulty: config.difficulty,
       sessionLength: config.sessionLength,
       attempted: 0,
       correct: 0,
       incorrect: 0,
     },
-    question: generateQuestion(config.operations, config.difficulty),
+    question,
     questionIndex: 0,
     active: true,
     attempts: [],
@@ -57,7 +68,8 @@ function createSession(config: PracticeConfiguration): SessionState {
 }
 
 export function usePracticeSession(config: PracticeConfiguration) {
-  const [state, setState] = useState(() => createSession(config))
+  const [review] = useState(() => createReviewGenerator(config))
+  const [state, setState] = useState(() => createSession(config, review))
   // Synchronous state protects against duplicate events before React renders.
   const current = useRef(state)
   useEffect(() => {
@@ -89,13 +101,22 @@ export function usePracticeSession(config: PracticeConfiguration) {
       selfReportedCorrect: correct,
       difficulty: question.difficulty,
       source: question.source,
+      ...(question.mistakePatternId
+        ? { mistakePatternId: question.mistakePatternId }
+        : {}),
       attemptedAt: new Date().toISOString(),
       sessionId: previous.session.id,
     }
     storageService.saveAttempt(attempt)
     const attempted = previous.session.attempted + 1
-    const active =
+    let active =
       config.sessionLength === 'continuous' || attempted < config.sessionLength
+    const next = active
+      ? config.mode === 'mistake-review'
+        ? review()
+        : nextQuestion(config, question)
+      : question
+    if (!next) active = false
     const updated: SessionState = {
       session: {
         ...previous.session,
@@ -104,7 +125,7 @@ export function usePracticeSession(config: PracticeConfiguration) {
         correct: previous.session.correct + (correct ? 1 : 0),
         incorrect: previous.session.incorrect + (correct ? 0 : 1),
       },
-      question: active ? nextQuestion(config, question) : question,
+      question: next ?? question,
       questionIndex: active
         ? previous.questionIndex + 1
         : previous.questionIndex,

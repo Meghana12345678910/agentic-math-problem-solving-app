@@ -77,6 +77,23 @@ function SettingsPage() {
             Show explanations
           </label>
         </fieldset>
+        <label>
+          Correct similar answers required for mastery
+          <input
+            type="number"
+            min="1"
+            max="100"
+            step="1"
+            required
+            value={settings.masteryThreshold}
+            onChange={(event) =>
+              setSettings({
+                ...settings,
+                masteryThreshold: event.target.valueAsNumber,
+              })
+            }
+          />
+        </label>
         <h2>Default practice choices</h2>
         <OperationSelector
           selected={settings.defaultOperations}

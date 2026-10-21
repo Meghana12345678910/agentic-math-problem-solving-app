@@ -115,3 +115,13 @@ There is no new mistake UI in this phase. Inspect the localStorage key in DevToo
 Every candidate must satisfy the existing operation/difficulty rules. Nearby division questions change the divisor or quotient and recompute the dividend to preserve whole-number division. Invalid inverse operations, zero divisors, negative answers, and out-of-range reversed facts are skipped. If a preferred strategy is unavailable, another valid strategy is used. The original missed fact is excluded, and a bounded in-memory history of 100 pattern IDs prevents consecutive repeats when alternatives exist. Generation does not modify mistake counters or mastery progress.
 
 No review-mode UI or review sessions are introduced; those remain Phase 14. Inspect generated output from the browser console while running the Vite development server. The full suite passes with `npm run test -- --run --maxWorkers=2`, which reduces CPU contention for browser-component tests on constrained machines.
+
+## Mistake review (Phase 14)
+
+Practice setup now offers regular practice and mistake review with a count of active patterns matching the chosen operations and difficulty. Review is disabled and explained when none match. Summary Practice Mistakes starts review when matching patterns exist; otherwise it is disabled. Legacy configurations without a mode still mean regular practice.
+
+Review sessions generate similar questions and preserve the parent pattern ID on each saved attempt. Both source patterns and generated operations respect setup choices. Priority increases with miss count and recency, decreases with successful-review count, and includes small random variation for similar scores. Each eligible pattern is used once before a new selection round, so sessions mix patterns rather than repeatedly serving only the highest-priority one. Immediate duplicate facts are avoided even across different parent patterns.
+
+Correct review self-reports increment the parent's similarCorrectCount. Wrong reports increment the parent's incorrectCount, update its last miss time, and reset successful-review progress; they do not create a separate pattern for the related question. Three correct similar answers mark a pattern mastered by default. The positive-integer threshold can be saved in Settings. Duplicate attempts cannot advance progress twice. Mastered patterns are excluded, and a future regular mistake on that original fact reopens the pattern.
+
+A review session ends at its selected length, on confirmed continuous-session ending, or early when all eligible patterns are mastered. The summary counts review attempts. No advanced mistake statistics or pattern-detail UI from Phase 15 is added.

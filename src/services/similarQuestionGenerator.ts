@@ -19,6 +19,7 @@ type Fact = Pick<
   | 'difficulty'
 >
 interface GenerationOptions {
+  allowedOperations?: readonly MathOperation[]
   random?: RandomSource
   strategy?: SimilarityStrategy
 }
@@ -110,6 +111,12 @@ export function createSimilarQuestionGenerator() {
       )
     const random = options.random ?? Math.random
     const groups = candidates(pattern)
+    for (const strategy of Object.keys(groups) as SimilarityStrategy[])
+      groups[strategy] = groups[strategy].filter(
+        (fact) =>
+          !options.allowedOperations ||
+          options.allowedOperations.includes(fact.operation),
+      )
     const previous = lastFacts.get(pattern.id)
     // If a small candidate pool has no alternative, relax only the last-fact
     // exclusion. The original missed fact is always excluded.

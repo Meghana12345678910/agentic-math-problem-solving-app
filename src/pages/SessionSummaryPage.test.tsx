@@ -63,7 +63,9 @@ describe('Phase 8 summary', () => {
     ).toBeDisabled()
     expect(
       screen.getByRole('button', { name: 'Practice Mistakes' }),
-    ).toHaveAccessibleDescription('Mistake review is not available yet.')
+    ).toHaveAccessibleDescription(
+      'No active mistakes match these practice choices.',
+    )
   })
 
   it.each([

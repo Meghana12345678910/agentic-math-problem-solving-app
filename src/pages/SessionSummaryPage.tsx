@@ -1,3 +1,5 @@
+import { eligiblePatterns } from '../services/reviewService'
+import { storageService } from '../services/storageService'
 import { useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import type { SessionSummary } from '../types/sessionSummary'
@@ -46,9 +48,13 @@ function SessionSummaryPage() {
 
   const configuration = {
     operations: session.operations,
+    mode: session.mode,
     difficulty: session.difficulty,
     sessionLength: session.sessionLength,
   }
+  const canReview =
+    eligiblePatterns(storageService.loadMistakePatterns(), configuration)
+      .length > 0
   const accuracy =
     session.attempted === 0
       ? 0
@@ -98,14 +104,26 @@ function SessionSummaryPage() {
         >
           Practice Again
         </Link>
-        <button
-          className="button button-secondary"
-          type="button"
-          disabled
-          aria-describedby="review-unavailable"
-        >
-          Practice Mistakes
-        </button>
+        {canReview ? (
+          <Link
+            className="button button-secondary"
+            to="/practice/session"
+            state={{
+              configuration: { ...configuration, mode: 'mistake-review' },
+            }}
+          >
+            Practice Mistakes
+          </Link>
+        ) : (
+          <button
+            className="button button-secondary"
+            type="button"
+            disabled
+            aria-describedby="review-unavailable"
+          >
+            Practice Mistakes
+          </button>
+        )}
         <Link className="button button-secondary" to="/practice/setup">
           Change Settings
         </Link>
@@ -116,7 +134,11 @@ function SessionSummaryPage() {
           Return Home
         </Link>
       </div>
-      <p id="review-unavailable">Mistake review is not available yet.</p>
+      <p id="review-unavailable">
+        {canReview
+          ? 'Practice similar questions from your active mistakes.'
+          : 'No active mistakes match these practice choices.'}
+      </p>
     </section>
   )
 }

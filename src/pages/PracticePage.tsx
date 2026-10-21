@@ -1,3 +1,5 @@
+import { storageService } from '../services/storageService'
+import { eligiblePatterns } from '../services/reviewService'
 import { useState } from 'react'
 import { Link, Navigate, useLocation } from 'react-router-dom'
 import type { PracticeConfiguration } from '../types/practiceConfiguration'
@@ -124,6 +126,12 @@ function PracticePage() {
   if (!isPracticeConfiguration(state?.configuration)) {
     return <Navigate to="/practice/setup" replace />
   }
+  if (
+    state.configuration.mode === 'mistake-review' &&
+    !eligiblePatterns(storageService.loadMistakePatterns(), state.configuration)
+      .length
+  )
+    return <Navigate to="/practice/setup" replace />
   return (
     <ActivePractice key={location.key} configuration={state.configuration} />
   )

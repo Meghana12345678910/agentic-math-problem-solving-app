@@ -1,3 +1,4 @@
+import { eligiblePatterns } from '../services/reviewService'
 import { storageService } from '../services/storageService'
 import { useState } from 'react'
 import type { FormEvent } from 'react'
@@ -22,14 +23,25 @@ function PracticeSetupPage() {
   const [sessionLength, setSessionLength] = useState<PracticeSessionLength>(
     defaults.defaultSessionLength as PracticeSessionLength,
   )
+  const [mode, setMode] = useState<'regular' | 'mistake-review'>('regular')
+  const [patterns] = useState(() => storageService.loadMistakePatterns())
+  const activeCount = eligiblePatterns(patterns, {
+    operations,
+    difficulty: difficulty ?? defaults.defaultDifficulty,
+    sessionLength,
+  }).length
   const navigate = useNavigate()
-  const valid = operations.length > 0 && difficulty !== null
+  const valid =
+    operations.length > 0 &&
+    difficulty !== null &&
+    (mode === 'regular' || activeCount > 0)
 
   function startSession(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (!operations.length || difficulty === null) return
+    if (!valid || difficulty === null) return
     const configuration: PracticeConfiguration = {
       operations,
+      mode,
       difficulty,
       sessionLength,
     }
@@ -47,6 +59,34 @@ function PracticeSetupPage() {
           selected={sessionLength}
           onChange={setSessionLength}
         />
+        <fieldset>
+          <legend>Practice mode</legend>
+          <label className="selector-option">
+            <input
+              type="radio"
+              name="practice-mode"
+              checked={mode === 'regular'}
+              onChange={() => setMode('regular')}
+            />
+            Regular practice
+          </label>
+          <label className="selector-option">
+            <input
+              type="radio"
+              name="practice-mode"
+              checked={mode === 'mistake-review'}
+              disabled={activeCount === 0}
+              aria-describedby="review-availability"
+              onChange={() => setMode('mistake-review')}
+            />
+            Mistake review
+          </label>
+          <p id="review-availability">
+            Active mistake patterns for these choices: {activeCount}.{' '}
+            {activeCount === 0 &&
+              'No active mistakes match your selected operations and difficulty.'}
+          </p>
+        </fieldset>
         <div id="setup-validation" role="status">
           {!operations.length && <p>Choose at least one operation.</p>}
           {difficulty === null && <p>Choose a difficulty level.</p>}

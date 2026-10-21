@@ -807,61 +807,61 @@ src/types/
 ## Phase 14: Mistake Review Mode
 ### 58. Add Review Mode to Practice Setup
 
-- [ ] Add a regular-practice option.
+- [x] Add a regular-practice option.
 
-- [ ] Add a mistake-review option.
+- [x] Add a mistake-review option.
 
-- [ ] Disable mistake review when no active mistakes exist.
+- [x] Disable mistake review when no active mistakes exist.
 
-- [ ] Explain why the option is disabled.
+- [x] Explain why the option is disabled.
 
-- [ ] Display the number of active mistake patterns.
+- [x] Display the number of active mistake patterns.
 
 ### 59. Prioritize Mistake Patterns
 
-- [ ] Give higher priority to frequently missed patterns.
+- [x] Give higher priority to frequently missed patterns.
 
-- [ ] Give higher priority to recently missed patterns.
+- [x] Give higher priority to recently missed patterns.
 
-- [ ] Give higher priority to patterns with little successful review.
+- [x] Give higher priority to patterns with little successful review.
 
-- [ ] Randomize patterns with similar priority.
+- [x] Randomize patterns with similar priority.
 
-- [ ] Test the prioritization logic.
+- [x] Test the prioritization logic.
 
 ### 60. Build Mistake Review Sessions
 
-- [ ] Select active mistake patterns.
+- [x] Select active mistake patterns.
 
-- [ ] Generate similar questions from those patterns.
+- [x] Generate similar questions from those patterns.
 
-- [ ] Mix multiple mistake patterns in one session.
+- [x] Mix multiple mistake patterns in one session.
 
-- [ ] Record which pattern produced each question.
+- [x] Record which pattern produced each question.
 
-- [ ] Display mistake-review counts in the session summary.
+- [x] Display mistake-review counts in the session summary.
 
 ### 61. Track Similar-Question Success
 
-- [ ] Increment similar-correct count after a correct review answer.
+- [x] Increment similar-correct count after a correct review answer.
 
-- [ ] Handle incorrect review answers.
+- [x] Handle incorrect review answers.
 
-- [ ] Update the original mistake pattern.
+- [x] Update the original mistake pattern.
 
-- [ ] Store the updated pattern locally.
+- [x] Store the updated pattern locally.
 
 ### 62. Implement Mastery Rules
 
-- [ ] Mark a pattern as mastered after three correct similar questions.
+- [x] Mark a pattern as mastered after three correct similar questions.
 
-- [ ] Make the mastery threshold configurable.
+- [x] Make the mastery threshold configurable.
 
-- [ ] Exclude mastered patterns from normal review.
+- [x] Exclude mastered patterns from normal review.
 
-- [ ] Allow mastered patterns to return after a future mistake.
+- [x] Allow mastered patterns to return after a future mistake.
 
-- [ ] Add tests for mastery transitions.
+- [x] Add tests for mastery transitions.
 
 ## Phase 15: Advanced Statistics
 ### 63. Add Mistake Statistics

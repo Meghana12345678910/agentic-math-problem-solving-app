@@ -6,6 +6,9 @@ export function isPracticeConfiguration(
   if (!value || typeof value !== 'object') return false
   const config = value as Partial<PracticeConfiguration>
   return (
+    (config.mode === undefined ||
+      config.mode === 'regular' ||
+      config.mode === 'mistake-review') &&
     Array.isArray(config.operations) &&
     config.operations.length > 0 &&
     config.operations.every((operation) =>

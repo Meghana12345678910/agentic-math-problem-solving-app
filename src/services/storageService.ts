@@ -1,5 +1,9 @@
 import type { MistakePattern } from '../types/mistake'
-import { mistakePatternKey, updateMistakePatterns } from './mistakeService'
+import {
+  mistakePatternKey,
+  updateMistakePatterns,
+  updateReviewPattern,
+} from './mistakeService'
 import { calculateStatistics } from './statisticsService'
 import type { AppSettings } from '../types/settings'
 import type { PracticeAttempt, PracticeSession } from '../types/session'
@@ -76,6 +80,7 @@ export function isAttempt(value: unknown): value is PracticeAttempt {
     !difficulty(value.difficulty) ||
     !date(value.attemptedAt) ||
     typeof value.selfReportedCorrect !== 'boolean' ||
+    (value.source === 'mistake-review' && !id(value.mistakePatternId)) ||
     !['regular', 'mistake-review'].includes(value.source as string) ||
     ![
       value.firstOperand,
@@ -306,6 +311,14 @@ export function createStorageService(
     )
       return true
     const saved = write('attempts', [...attempts, attempt])
+    if (attempt.source === 'mistake-review') {
+      const updated = updateReviewPattern(
+        loadMistakePatterns(),
+        attempt,
+        loadSettings().masteryThreshold,
+      )
+      return saveMistakePatterns(updated) && saved
+    }
     if (!attempt.selfReportedCorrect) {
       const patternsSaved = saveMistakePatterns(
         updateMistakePatterns(loadMistakePatterns(), attempt),
