@@ -78,7 +78,16 @@ function generateOperands(
   }
 }
 
-function operandsMatchDifficulty(question: Question): boolean {
+function operandsMatchDifficulty(
+  question: Pick<
+    Question,
+    | 'operation'
+    | 'difficulty'
+    | 'firstOperand'
+    | 'secondOperand'
+    | 'correctAnswer'
+  >,
+): boolean {
   const {
     operation,
     difficulty,
@@ -107,6 +116,55 @@ function operandsMatchDifficulty(question: Question): boolean {
   )
 }
 
+export function isValidFact(
+  fact: Pick<
+    Question,
+    | 'operation'
+    | 'difficulty'
+    | 'firstOperand'
+    | 'secondOperand'
+    | 'correctAnswer'
+  >,
+): boolean {
+  return (
+    operations.includes(fact.operation) &&
+    [1, 2, 3, 4].includes(fact.difficulty) &&
+    [fact.firstOperand, fact.secondOperand, fact.correctAnswer].every(
+      (value) => Number.isSafeInteger(value) && value >= 0,
+    ) &&
+    calculateAnswer(fact.operation, fact.firstOperand, fact.secondOperand) ===
+      fact.correctAnswer &&
+    operandsMatchDifficulty(fact)
+  )
+}
+
+export function createQuestion(
+  operation: MathOperation,
+  difficulty: DifficultyLevel,
+  firstOperand: number,
+  secondOperand: number,
+  random: RandomSource = Math.random,
+): Question {
+  const correctAnswer = calculateAnswer(operation, firstOperand, secondOperand)
+  const fact = {
+    operation,
+    difficulty,
+    firstOperand,
+    secondOperand,
+    correctAnswer,
+  }
+  if (!isValidFact(fact))
+    throw new RangeError(
+      'Question operands must match the operation and difficulty.',
+    )
+  return {
+    ...fact,
+    id: createId(),
+    displayText: `${firstOperand} ${symbols[operation]} ${secondOperand} = ?`,
+    choices: generateAnswerChoices(fact, random),
+    source: 'regular',
+  }
+}
 export function isValidQuestion(question: Question): boolean {
   if (
     !operations.includes(question.operation) ||
@@ -123,7 +181,10 @@ export function isValidQuestion(question: Question): boolean {
     return false
   return (
     Boolean(question.id) &&
-    question.source === 'regular' &&
+    (question.source === 'regular' ||
+      (question.source === 'mistake-review' &&
+        typeof question.mistakePatternId === 'string' &&
+        question.mistakePatternId.length > 0)) &&
     question.displayText ===
       `${question.firstOperand} ${symbols[question.operation]} ${question.secondOperand} = ?` &&
     operandsMatchDifficulty(question) &&
@@ -160,26 +221,13 @@ export function generateQuestion(
     try {
       const selected = enabled[randomInteger(0, enabled.length - 1, random)]
       const [first, second] = generateOperands(selected, difficulty, random)
-      const answer = calculateAnswer(selected, first, second)
-      const question: Question = {
-        id: createId(),
-        operation: selected,
+      const question = createQuestion(
+        selected,
         difficulty,
-        firstOperand: first,
-        secondOperand: second,
-        displayText: `${first} ${symbols[selected]} ${second} = ?`,
-        correctAnswer: answer,
-        choices: generateAnswerChoices(
-          {
-            operation: selected,
-            firstOperand: first,
-            secondOperand: second,
-            correctAnswer: answer,
-          },
-          random,
-        ),
-        source: 'regular',
-      }
+        first,
+        second,
+        random,
+      )
       if (isValidQuestion(question)) return question
       lastError = new Error('Generated question did not pass validation.')
     } catch (error) {

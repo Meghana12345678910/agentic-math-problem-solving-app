@@ -107,3 +107,11 @@ A self-reported wrong answer creates or updates `mathPractice.mistakePatterns` w
 Patterns load and validate at startup. Invalid records are skipped while valid records are retained; duplicate stored facts are consolidated using the latest record and highest existing miss count. Malformed storage safely falls back without deleting unrelated data, and storage failure uses the existing warning and in-memory fallback. Reset Statistics preserves patterns; Clear All Application Data removes them.
 
 There is no new mistake UI in this phase. Inspect the localStorage key in DevTools for manual verification. Similar-question generation, review sessions, review success tracking, and mastery transitions remain later work.
+
+## Similar-question generation (Phase 13)
+
+`generateSimilarQuestion(pattern)` in `src/services/similarQuestionGenerator.ts` returns a complete related question with four valid shuffled choices, source `mistake-review`, and the originating mistakePatternId. It selects between nearby-number, reversed-operand (addition/multiplication only), and inverse fact-family strategies. Optional generation options accept an injected random source and a preferred strategy for testing.
+
+Every candidate must satisfy the existing operation/difficulty rules. Nearby division questions change the divisor or quotient and recompute the dividend to preserve whole-number division. Invalid inverse operations, zero divisors, negative answers, and out-of-range reversed facts are skipped. If a preferred strategy is unavailable, another valid strategy is used. The original missed fact is excluded, and a bounded in-memory history of 100 pattern IDs prevents consecutive repeats when alternatives exist. Generation does not modify mistake counters or mastery progress.
+
+No review-mode UI or review sessions are introduced; those remain Phase 14. Inspect generated output from the browser console while running the Vite development server. The full suite passes with `npm run test -- --run --maxWorkers=2`, which reduces CPU contention for browser-component tests on constrained machines.
