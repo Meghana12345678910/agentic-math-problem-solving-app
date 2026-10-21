@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import { MemoryRouter } from 'react-router-dom'
+import { TestRouter as MemoryRouter } from '../../test/TestRouter'
 import QuestionCard from './QuestionCard'
 import type { Question } from '../../types/question'
 import App from '../../App'
@@ -207,6 +207,9 @@ describe('Phase 6 question card', () => {
       </MemoryRouter>,
     )
     await user.click(screen.getByRole('link', { name: 'Try a sample card' }))
+    await user.click(
+      screen.getByRole('button', { name: 'End session and leave' }),
+    )
     expect(
       screen.getByRole('heading', { name: 'Try a sample card' }),
     ).toBeInTheDocument()

@@ -1,3 +1,4 @@
+import type { Question } from '../types/question'
 import type { MistakePattern } from '../types/mistake'
 import type { PracticeConfiguration } from '../types/practiceConfiguration'
 import type { RandomSource } from '../utils/math'
@@ -41,10 +42,19 @@ export function prioritizePatterns(
     .sort((a, b) => b.score - a.score)
     .map((item) => item.pattern)
 }
-export function createReviewGenerator(config: PracticeConfiguration) {
+export function createReviewGenerator(
+  config: PracticeConfiguration,
+  previousQuestion?: Question,
+) {
   const generate = createSimilarQuestionGenerator()
   const used = new Set<string>()
-  let previousFact = ''
+  let previousFact = previousQuestion
+    ? [
+        previousQuestion.operation,
+        previousQuestion.firstOperand,
+        previousQuestion.secondOperand,
+      ].join(':')
+    : ''
   return () => {
     const active = eligiblePatterns(
       storageService.loadMistakePatterns(),

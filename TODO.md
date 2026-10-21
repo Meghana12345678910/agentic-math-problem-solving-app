@@ -995,27 +995,27 @@ src/types/
 ## Phase 18: Session Recovery and Navigation Safety
 ### 74. Persist an Active Session
 
-- [ ] Save the active session.
+- [x] Save the active session.
 
-- [ ] Save the current question.
+- [x] Save the current question.
 
-- [ ] Save the selected answer when appropriate.
+- [x] Save the selected answer when appropriate.
 
-- [ ] Restore the session after a page refresh.
+- [x] Restore the session after a page refresh.
 
-- [ ] Clear restored state when the session ends.
+- [x] Clear restored state when the session ends.
 
 ### 75. Protect Against Accidental Navigation
 
-- [ ] Detect attempts to leave an active session.
+- [x] Detect attempts to leave an active session.
 
-- [ ] Display a confirmation prompt.
+- [x] Display a confirmation prompt.
 
-- [ ] Allow the user to continue the session.
+- [x] Allow the user to continue the session.
 
-- [ ] Allow the user to end and leave the session.
+- [x] Allow the user to end and leave the session.
 
-- [ ] Avoid showing warnings after session completion.
+- [x] Avoid showing warnings after session completion.
 
 ## Phase 19: Error Handling
 ### 76. Handle Invalid Stored Data

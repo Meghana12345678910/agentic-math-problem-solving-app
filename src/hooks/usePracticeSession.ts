@@ -1,3 +1,4 @@
+import type { ActiveSessionSnapshot } from '../types/activeSession'
 import { createReviewGenerator } from '../services/reviewService'
 import { storageService } from '../services/storageService'
 import { useEffect, useRef, useState } from 'react'
@@ -12,6 +13,8 @@ interface SessionState {
   question: Question
   questionIndex: number
   active: boolean
+  selectedAnswer: number | null
+  isCardFlipped: boolean
   attempts: PracticeAttempt[]
 }
 
@@ -64,17 +67,51 @@ function createSession(
     questionIndex: 0,
     active: true,
     attempts: [],
+    selectedAnswer: null,
+    isCardFlipped: false,
   }
 }
 
-export function usePracticeSession(config: PracticeConfiguration) {
-  const [review] = useState(() => createReviewGenerator(config))
-  const [state, setState] = useState(() => createSession(config, review))
+export function usePracticeSession(
+  config: PracticeConfiguration,
+  restored?: ActiveSessionSnapshot | null,
+) {
+  const [review] = useState(() =>
+    createReviewGenerator(config, restored?.question),
+  )
+  const [state, setState] = useState(() =>
+    restored ? { ...restored, active: true } : createSession(config, review),
+  )
   // Synchronous state protects against duplicate events before React renders.
   const current = useRef(state)
+  function persist(snapshot: SessionState) {
+    storageService.saveSession(snapshot.session)
+    if (snapshot.active)
+      storageService.saveActiveSession({ ...snapshot, configuration: config })
+    else storageService.clearActiveSession(snapshot.session.id)
+  }
   useEffect(() => {
     storageService.saveSession(state.session)
-  }, [state.session])
+    if (state.active)
+      storageService.saveActiveSession({ ...state, configuration: config })
+    else storageService.clearActiveSession(state.session.id)
+  }, [state, config])
+
+  function updateCard(selectedAnswer: number | null, isCardFlipped: boolean) {
+    const previous = current.current
+    if (
+      !previous.active ||
+      previous.isCardFlipped ||
+      (selectedAnswer !== null &&
+        !previous.question.choices.includes(selectedAnswer)) ||
+      (isCardFlipped && selectedAnswer === null)
+    )
+      return
+    const updated = { ...previous, selectedAnswer, isCardFlipped }
+    current.current = updated
+    persist(updated)
+    setState(updated)
+  }
 
   function recordResult(
     questionId: string,
@@ -130,9 +167,12 @@ export function usePracticeSession(config: PracticeConfiguration) {
         ? previous.questionIndex + 1
         : previous.questionIndex,
       active,
+      selectedAnswer: null,
+      isCardFlipped: false,
       attempts: [...previous.attempts, attempt],
     }
     current.current = updated
+    persist(updated)
     setState(updated)
   }
 
@@ -145,8 +185,9 @@ export function usePracticeSession(config: PracticeConfiguration) {
       session: { ...previous.session, completedAt: new Date().toISOString() },
     }
     current.current = updated
+    persist(updated)
     setState(updated)
   }
 
-  return { ...state, recordResult, endSession }
+  return { ...state, recordResult, endSession, updateCard }
 }

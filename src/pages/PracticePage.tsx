@@ -1,3 +1,5 @@
+import type { ActiveSessionSnapshot } from '../types/activeSession'
+import SessionNavigationGuard from '../components/practice/SessionNavigationGuard'
 import { storageService } from '../services/storageService'
 import { eligiblePatterns } from '../services/reviewService'
 import { useState } from 'react'
@@ -10,7 +12,9 @@ import ProgressBar from '../components/practice/ProgressBar'
 
 function ActivePractice({
   configuration,
+  restored,
 }: {
+  restored?: ActiveSessionSnapshot | null
   configuration: PracticeConfiguration
 }) {
   const {
@@ -21,9 +25,14 @@ function ActivePractice({
     attempts,
     recordResult,
     endSession,
-  } = usePracticeSession(configuration)
+    selectedAnswer,
+    isCardFlipped,
+    updateCard,
+  } = usePracticeSession(configuration, restored)
   const [confirmEnd, setConfirmEnd] = useState(false)
 
+  const [leaving, setLeaving] = useState(false)
+  if (leaving) return null
   if (!active)
     return (
       <Navigate
@@ -42,6 +51,13 @@ function ActivePractice({
 
   return (
     <section>
+      <SessionNavigationGuard
+        active={active}
+        onEnd={() => {
+          setLeaving(true)
+          endSession()
+        }}
+      />
       <h1>Practice session</h1>
       <dl className="session-configuration">
         <dt>Operations</dt>
@@ -69,6 +85,9 @@ function ActivePractice({
         <>
           <QuestionCard
             question={question}
+            initialSelectedAnswer={selectedAnswer}
+            initialFlipped={isCardFlipped}
+            onCardChange={updateCard}
             questionNumber={questionIndex + 1}
             totalQuestions={configuration.sessionLength}
             onResult={(correct, selectedAnswer) =>
@@ -123,17 +142,38 @@ function ActivePractice({
 function PracticePage() {
   const location = useLocation()
   const state = location.state as { configuration?: unknown } | null
-  if (!isPracticeConfiguration(state?.configuration)) {
-    return <Navigate to="/practice/setup" replace />
-  }
+  const [saved] = useState(() => storageService.loadActiveSession())
+  const explicit = isPracticeConfiguration(state?.configuration)
+    ? state.configuration
+    : null
+  // A refresh may retain history state. Resume only a matching active snapshot;
+  // an explicit new configuration must never silently become a different session.
+  const matching =
+    saved &&
+    (!explicit ||
+      (explicit.difficulty === saved.configuration.difficulty &&
+        explicit.sessionLength === saved.configuration.sessionLength &&
+        (explicit.mode ?? 'regular') ===
+          (saved.configuration.mode ?? 'regular') &&
+        [...explicit.operations].sort().join() ===
+          [...saved.configuration.operations].sort().join()))
+      ? saved
+      : null
+  const configuration = explicit ?? matching?.configuration
+  if (!configuration) return <Navigate to="/practice/setup" replace />
   if (
-    state.configuration.mode === 'mistake-review' &&
-    !eligiblePatterns(storageService.loadMistakePatterns(), state.configuration)
+    !matching &&
+    configuration.mode === 'mistake-review' &&
+    !eligiblePatterns(storageService.loadMistakePatterns(), configuration)
       .length
   )
     return <Navigate to="/practice/setup" replace />
   return (
-    <ActivePractice key={location.key} configuration={state.configuration} />
+    <ActivePractice
+      key={location.key}
+      configuration={configuration}
+      restored={matching}
+    />
   )
 }
 

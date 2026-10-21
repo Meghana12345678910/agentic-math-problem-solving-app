@@ -1,3 +1,5 @@
+import type { ActiveSessionSnapshot } from '../types/activeSession'
+import { isValidQuestion } from './questionGenerator'
 import type { MistakePattern } from '../types/mistake'
 import {
   mistakePatternKey,
@@ -139,6 +141,57 @@ export function isMistakePattern(value: unknown): value is MistakePattern {
             ? NaN
             : first / second
   return answer === value.correctAnswer
+}
+export function isActiveSessionSnapshot(
+  value: unknown,
+): value is ActiveSessionSnapshot {
+  if (
+    !record(value) ||
+    !isPracticeConfiguration(value.configuration) ||
+    !isSession(value.session) ||
+    value.session.completedAt !== undefined ||
+    !record(value.question) ||
+    !Array.isArray(value.question.choices) ||
+    !isValidQuestion(
+      value.question as unknown as import('../types/question').Question,
+    ) ||
+    !integer(value.questionIndex) ||
+    value.questionIndex !== value.session.attempted ||
+    !Array.isArray(value.attempts) ||
+    !value.attempts.every(isAttempt) ||
+    value.attempts.length !== value.session.attempted ||
+    typeof value.isCardFlipped !== 'boolean'
+  )
+    return false
+  const snapshot = value as unknown as ActiveSessionSnapshot
+  return (
+    snapshot.configuration.difficulty === snapshot.session.difficulty &&
+    snapshot.configuration.sessionLength === snapshot.session.sessionLength &&
+    (snapshot.configuration.mode ?? 'regular') ===
+      (snapshot.session.mode ?? 'regular') &&
+    JSON.stringify(snapshot.configuration.operations) ===
+      JSON.stringify(snapshot.session.operations) &&
+    snapshot.question.difficulty === snapshot.session.difficulty &&
+    snapshot.configuration.operations.includes(snapshot.question.operation) &&
+    snapshot.question.source ===
+      (snapshot.configuration.mode === 'mistake-review'
+        ? 'mistake-review'
+        : 'regular') &&
+    snapshot.attempts.every(
+      (attempt) =>
+        attempt.sessionId === snapshot.session.id &&
+        attempt.questionId !== snapshot.question.id,
+    ) &&
+    new Set(snapshot.attempts.map((attempt) => attempt.questionId)).size ===
+      snapshot.attempts.length &&
+    snapshot.attempts.filter((attempt) => attempt.selfReportedCorrect)
+      .length === snapshot.session.correct &&
+    (snapshot.session.sessionLength === 'continuous' ||
+      snapshot.session.attempted < snapshot.session.sessionLength) &&
+    (snapshot.selectedAnswer === null ||
+      snapshot.question.choices.includes(snapshot.selectedAnswer)) &&
+    (!snapshot.isCardFlipped || snapshot.selectedAnswer !== null)
+  )
 }
 /** Inject the browser storage accessor so blocked storage can be tested. */
 export function createStorageService(
@@ -330,12 +383,41 @@ export function createStorageService(
     }
     return saved
   }
+  function loadActiveSession() {
+    return read(
+      'activeSession',
+      (value: unknown): value is ActiveSessionSnapshot | null =>
+        value === null || isActiveSessionSnapshot(value),
+      null,
+    )
+  }
+  function saveActiveSession(snapshot: ActiveSessionSnapshot) {
+    if (!isActiveSessionSnapshot(snapshot))
+      throw new Error('Invalid active session snapshot')
+    return write('activeSession', snapshot)
+  }
+  function clearActiveSession(sessionId?: string) {
+    if (sessionId && loadActiveSession()?.session.id !== sessionId) return true
+    const key = prefix + 'activeSession'
+    memory.set(key, null)
+    pending.add(key)
+    if (futureVersion) return false
+    try {
+      getStorage().removeItem(key)
+      pending.delete(key)
+      return true
+    } catch {
+      warn()
+      return false
+    }
+  }
   function clearAllData() {
     if (!initialized) initialize()
     // This explicit clear-all action also permits removing newer-version app data.
     futureVersion = false
     const clearedValues: Record<string, unknown> = {
       settings: { ...defaultSettings, defaultOperations: [] },
+      activeSession: null,
       attempts: [],
       sessions: [],
       mistakePatterns: [],
@@ -359,6 +441,7 @@ export function createStorageService(
   }
   function resetStatistics() {
     const results = [
+      clearActiveSession(),
       write('attempts', []),
       write('sessions', []),
       write('statistics', calculateStatistics([])),
@@ -366,6 +449,9 @@ export function createStorageService(
     return results.every(Boolean)
   }
   return {
+    loadActiveSession,
+    saveActiveSession,
+    clearActiveSession,
     clearAllData,
     resetStatistics,
     initialize,

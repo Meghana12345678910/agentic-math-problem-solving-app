@@ -5,6 +5,7 @@ interface ConfirmDialogProps {
   title?: string
   description?: string
   detail?: string
+  cancelLabel?: string
   confirmLabel?: string
   onConfirm: () => void
   onCancel: () => void
@@ -17,6 +18,7 @@ function ConfirmDialog({
   description = 'Are you sure you want to erase all practice history and statistics?',
   detail = 'Your settings will stay the same.',
   confirmLabel = 'Yes, reset statistics',
+  cancelLabel = 'Cancel',
 }: ConfirmDialogProps) {
   const titleId = useId()
   const descriptionId = useId()
@@ -60,7 +62,7 @@ function ConfirmDialog({
             className="button button-secondary"
             onClick={onCancel}
           >
-            Cancel
+            {cancelLabel}
           </button>
           <button
             ref={confirm}

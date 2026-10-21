@@ -1,5 +1,5 @@
 import { act, render, renderHook, screen } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
+import { TestRouter as MemoryRouter } from '../test/TestRouter'
 import { describe, expect, it, vi } from 'vitest'
 import { updateMistakePatterns } from './mistakeService'
 import { createStorageService, isMistakePattern } from './storageService'

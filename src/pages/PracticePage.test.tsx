@@ -1,6 +1,6 @@
 import { act, render, renderHook, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { MemoryRouter } from 'react-router-dom'
+import { TestRouter as MemoryRouter } from '../test/TestRouter'
 import { describe, expect, it, vi } from 'vitest'
 import App from '../App'
 import { usePracticeSession, nextQuestion } from '../hooks/usePracticeSession'

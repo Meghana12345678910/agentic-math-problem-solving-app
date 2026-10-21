@@ -11,6 +11,9 @@ import CardBack from './CardBack'
 import './QuestionCard.css'
 
 interface QuestionCardProps {
+  initialSelectedAnswer?: number | null
+  initialFlipped?: boolean
+  onCardChange?: (answer: number | null, flipped: boolean) => void
   question: Question
   questionNumber: number
   totalQuestions: number | 'continuous'
@@ -20,14 +23,29 @@ interface QuestionCardProps {
 function CardContent({
   question,
   onResult,
-}: Pick<QuestionCardProps, 'question' | 'onResult'>) {
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
-  const [isCardFlipped, setIsCardFlipped] = useState(false)
+  initialSelectedAnswer,
+  initialFlipped,
+  onCardChange,
+}: Pick<
+  QuestionCardProps,
+  | 'question'
+  | 'onResult'
+  | 'initialSelectedAnswer'
+  | 'initialFlipped'
+  | 'onCardChange'
+>) {
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(
+    initialSelectedAnswer ?? null,
+  )
+  const [isCardFlipped, setIsCardFlipped] = useState(initialFlipped ?? false)
   const [result, setResult] = useState<boolean | null>(null)
   const resultSubmitted = useRef(false)
 
   function selectAnswer(answer: number) {
-    if (!isCardFlipped) setSelectedAnswer(answer)
+    if (!isCardFlipped) {
+      setSelectedAnswer(answer)
+      onCardChange?.(answer, false)
+    }
   }
   function reportResult(correct: boolean) {
     if (!isCardFlipped || resultSubmitted.current) return
@@ -71,7 +89,10 @@ function CardContent({
           isCardFlipped={isCardFlipped}
           onSelect={selectAnswer}
           onFlip={() => {
-            if (selectedAnswer !== null) setIsCardFlipped(true)
+            if (selectedAnswer !== null) {
+              setIsCardFlipped(true)
+              onCardChange?.(selectedAnswer, true)
+            }
           }}
         />
         <CardBack
@@ -140,6 +161,9 @@ function QuestionCard(props: QuestionCardProps) {
       <CardContent
         key={props.question.id}
         question={props.question}
+        initialSelectedAnswer={props.initialSelectedAnswer}
+        initialFlipped={props.initialFlipped}
+        onCardChange={props.onCardChange}
         onResult={(correct, selectedAnswer) => {
           setFeedback(
             storageService.loadSettings().feedbackEffectsEnabled === false
