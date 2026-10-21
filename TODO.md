@@ -394,81 +394,81 @@ src/types/
 ## Phase 7: Practice Session
 ### 26. Create the Practice Session State
 
-- [ ] Store the session ID.
+- [x] Store the session ID.
 
-- [ ] Store the selected operations.
+- [x] Store the selected operations.
 
-- [ ] Store the selected difficulty.
+- [x] Store the selected difficulty.
 
-- [ ] Store the selected session length.
+- [x] Store the selected session length.
 
-- [ ] Store the current question index.
+- [x] Store the current question index.
 
-- [ ] Store session correct and incorrect totals.
+- [x] Store session correct and incorrect totals.
 
-- [ ] Store whether the session is active.
+- [x] Store whether the session is active.
 
 ### 27. Build the Practice Session Page
 
-- [ ] Read the setup configuration.
+- [x] Read the setup configuration.
 
-- [ ] Generate the first question.
+- [x] Generate the first question.
 
-- [ ] Display the question card.
+- [x] Display the question card.
 
-- [ ] Handle missing or invalid setup data.
+- [x] Handle missing or invalid setup data.
 
-- [ ] Redirect to the setup page when no valid session exists.
+- [x] Redirect to the setup page when no valid session exists.
 
 ### 28. Record Self-Reported Results
 
-- [ ] Handle the I Got It Right button.
+- [x] Handle the I Got It Right button.
 
-- [ ] Handle the I Got It Wrong button.
+- [x] Handle the I Got It Wrong button.
 
-- [ ] Increment the session-attempt total.
+- [x] Increment the session-attempt total.
 
-- [ ] Increment the correct or incorrect total.
+- [x] Increment the correct or incorrect total.
 
-- [ ] Prevent duplicate result recording.
+- [x] Prevent duplicate result recording.
 
-- [ ] Store the completed attempt.
+- [x] Store the completed attempt.
 
 ### 29. Advance to the Next Question
 
-- [ ] Generate a new question after recording a result.
+- [x] Generate a new question after recording a result.
 
-- [ ] Increment the question number.
+- [x] Increment the question number.
 
-- [ ] Reset the selected answer.
+- [x] Reset the selected answer.
 
-- [ ] Reset the card-flip state.
+- [x] Reset the card-flip state.
 
-- [ ] Avoid immediately repeating the same question.
+- [x] Avoid immediately repeating the same question.
 
 - [ ] Add an optional short transition.
 
 ### 30. Add Session Progress
 
-- [ ] Display “Question X of Y.”
+- [x] Display “Question X of Y.”
 
-- [ ] Add a visual progress bar.
+- [x] Add a visual progress bar.
 
-- [ ] Update progress after every attempt.
+- [x] Update progress after every attempt.
 
-- [ ] Hide fixed progress for continuous practice.
+- [x] Hide fixed progress for continuous practice.
 
-- [ ] Ensure progress is accessible to screen readers.
+- [x] Ensure progress is accessible to screen readers.
 
 ### 31. Support Continuous Practice
 
-- [ ] Generate questions without a fixed endpoint.
+- [x] Generate questions without a fixed endpoint.
 
-- [ ] Add an End Session button.
+- [x] Add an End Session button.
 
-- [ ] Confirm before ending when appropriate.
+- [x] Confirm before ending when appropriate.
 
-- [ ] Generate a summary after the session ends.
+- [x] Generate a summary after the session ends.
 
 ## Phase 8: Session Summary
 ### 32. Detect Session Completion

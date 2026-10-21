@@ -45,7 +45,7 @@ describe('Phase 2 interface', () => {
   it.each([
     ['/', 'Welcome to Math Practice!'],
     ['/practice/setup', 'Practice setup'],
-    ['/practice/session', 'Practice session'],
+    ['/practice/session', 'Practice setup'],
     ['/practice/summary', 'Session summary'],
     ['/statistics', 'Statistics'],
     ['/settings', 'Settings'],

@@ -87,7 +87,7 @@ describe('Phase 6 question card', () => {
       const wrong = screen.getByRole('button', { name: 'I Got It Wrong' })
       await user.dblClick(correct ? right : wrong)
       await user.click(correct ? wrong : right)
-      expect(result).toHaveBeenCalledExactlyOnceWith(correct)
+      expect(result).toHaveBeenCalledExactlyOnceWith(correct, 48)
       expect(right).toBeDisabled()
       expect(wrong).toBeDisabled()
     },
@@ -189,7 +189,20 @@ describe('Phase 6 question card', () => {
   it('opens the sample card from the practice page without starting a session', async () => {
     const user = userEvent.setup()
     render(
-      <MemoryRouter initialEntries={['/practice/session']}>
+      <MemoryRouter
+        initialEntries={[
+          {
+            pathname: '/practice/session',
+            state: {
+              configuration: {
+                operations: ['addition'],
+                difficulty: 1,
+                sessionLength: 5,
+              },
+            },
+          },
+        ]}
+      >
         <App />
       </MemoryRouter>,
     )

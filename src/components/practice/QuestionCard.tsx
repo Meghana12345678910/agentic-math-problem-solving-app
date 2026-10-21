@@ -9,7 +9,7 @@ interface QuestionCardProps {
   question: Question
   questionNumber: number
   totalQuestions: number | 'continuous'
-  onResult?: (correct: boolean) => void
+  onResult?: (correct: boolean, selectedAnswer: number) => void
 }
 
 function CardContent({
@@ -28,7 +28,7 @@ function CardContent({
     if (!isCardFlipped || resultSubmitted.current) return
     resultSubmitted.current = true
     setResult(correct)
-    onResult?.(correct)
+    if (selectedAnswer !== null) onResult?.(correct, selectedAnswer)
   }
   function selectByKeyboard(event: KeyboardEvent<HTMLDivElement>) {
     const target = event.target as HTMLElement

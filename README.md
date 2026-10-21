@@ -59,3 +59,11 @@ Open `/practice/card-preview`, or follow **Try a sample card** from the practice
 `QuestionCard` accepts a question, question number, total question count (or `continuous`), and an optional result callback. Changing the question ID resets selection, flip state, and the result lock. The card-local animation checkbox disables transitions; the system reduced-motion preference also disables them. Number keys 1-4 select answers while focus is inside the card; native buttons support Enter and Space. Inactive faces are hidden from assistive technology and made inert, and revealing the answer moves focus to its heading.
 
 Session generation, statistics, persistence, and automatic advancement remain later work.
+
+## Practice sessions (Phase 7)
+
+Start from `/practice/setup`. A valid configuration starts generated cards with live attempted, correct, and incorrect counts. Self-reported results are stored once in memory with the selected answer and question/session details. Choosing an answer or flipping does not record an attempt. Each recorded result advances to a different fact with cleared card state.
+
+Fixed sessions show accessible progress and stop at the selected count, displaying a brief finished message. Continuous practice has no fixed progress bar; End Session asks for confirmation and then shows an inline summary with the counts. Direct session URLs without valid setup redirect to setup. The sample-card preview is still available at `/practice/card-preview`.
+
+Attempts are not persisted yet. The dedicated fixed-session summary page, summary actions, and completion timestamps remain Phase 8 work; storage is Phase 9. The optional between-question transition is not implemented.

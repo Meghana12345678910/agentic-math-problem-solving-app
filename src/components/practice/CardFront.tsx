@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import type { Question } from '../../types/question'
 import AnswerChoice from './AnswerChoice'
 
@@ -16,6 +17,10 @@ function CardFront({
   onSelect,
   onFlip,
 }: CardFrontProps) {
+  const heading = useRef<HTMLHeadingElement>(null)
+  useEffect(() => {
+    heading.current?.focus()
+  }, [])
   const operationWords = {
     addition: 'plus',
     subtraction: 'minus',
@@ -29,6 +34,8 @@ function CardFront({
       inert={isCardFlipped}
     >
       <h3
+        ref={heading}
+        tabIndex={-1}
         className="math-problem"
         aria-label={`${question.firstOperand} ${operationWords[question.operation]} ${question.secondOperand} equals what?`}
       >
