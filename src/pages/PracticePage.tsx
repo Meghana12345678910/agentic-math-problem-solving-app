@@ -11,9 +11,32 @@ function ActivePractice({
 }: {
   configuration: PracticeConfiguration
 }) {
-  const { session, question, questionIndex, active, recordResult, endSession } =
-    usePracticeSession(configuration)
+  const {
+    session,
+    question,
+    questionIndex,
+    active,
+    attempts,
+    recordResult,
+    endSession,
+  } = usePracticeSession(configuration)
   const [confirmEnd, setConfirmEnd] = useState(false)
+
+  if (!active)
+    return (
+      <Navigate
+        to="/practice/summary"
+        replace
+        state={{
+          summary: {
+            session,
+            mistakeReviewCount: attempts.filter(
+              (attempt) => attempt.source === 'mistake-review',
+            ).length,
+          },
+        }}
+      />
+    )
 
   return (
     <section>
@@ -40,7 +63,7 @@ function ActivePractice({
           total={configuration.sessionLength}
         />
       )}
-      {active ? (
+      {active && (
         <>
           <QuestionCard
             question={question}
@@ -84,15 +107,6 @@ function ActivePractice({
             </>
           )}
         </>
-      ) : (
-        <section aria-labelledby="session-ended">
-          <h2 id="session-ended">
-            {configuration.sessionLength === 'continuous'
-              ? 'Session summary'
-              : 'Practice finished'}
-          </h2>
-          <p>You practiced {session.attempted} questions. Nice effort!</p>
-        </section>
       )}
       <p>
         <Link to="/practice/card-preview">Try a sample card</Link>

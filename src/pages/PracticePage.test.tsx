@@ -77,22 +77,20 @@ describe('Phase 7 practice sessions', () => {
     ).toBe(true)
   })
 
-  it('stops a fixed session at its configured length without navigating to Phase 8 summary', async () => {
+  it('stops a fixed session and navigates to its summary', async () => {
     renderSession()
     for (let index = 0; index < 5; index += 1) await answer(index % 2 === 0)
     expect(
-      screen.getByRole('heading', { name: 'Practice finished' }),
+      screen.getByRole('heading', { name: 'Session summary' }),
     ).toBeInTheDocument()
-    expect(
-      screen.getByText('Attempted: 5. Correct: 3. Incorrect: 2.'),
-    ).toBeInTheDocument()
-    expect(screen.getByRole('progressbar')).toHaveAttribute('value', '5')
+    expect(screen.getByText('60%')).toBeInTheDocument()
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
     expect(
       screen.queryByRole('button', { name: 'Flip Card' }),
     ).not.toBeInTheDocument()
   })
 
-  it('continues beyond fixed lengths, confirms ending, and shows an inline summary', async () => {
+  it('continues beyond fixed lengths, confirms ending, and shows the summary page', async () => {
     const user = userEvent.setup()
     renderSession({ ...config, sessionLength: 'continuous' })
     expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
@@ -110,9 +108,7 @@ describe('Phase 7 practice sessions', () => {
     expect(
       screen.getByRole('heading', { name: 'Session summary' }),
     ).toBeInTheDocument()
-    expect(
-      screen.getByText('Attempted: 2. Correct: 2. Incorrect: 0.'),
-    ).toBeInTheDocument()
+    expect(screen.getByText('100%')).toBeInTheDocument()
     expect(
       screen.queryByRole('button', { name: 'Flip Card' }),
     ).not.toBeInTheDocument()

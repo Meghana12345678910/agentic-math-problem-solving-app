@@ -95,6 +95,7 @@ export function usePracticeSession(config: PracticeConfiguration) {
       session: {
         ...previous.session,
         attempted,
+        ...(!active ? { completedAt: new Date().toISOString() } : {}),
         correct: previous.session.correct + (correct ? 1 : 0),
         incorrect: previous.session.incorrect + (correct ? 0 : 1),
       },
@@ -112,7 +113,11 @@ export function usePracticeSession(config: PracticeConfiguration) {
   function endSession() {
     const previous = current.current
     if (!previous.active) return
-    const updated = { ...previous, active: false }
+    const updated = {
+      ...previous,
+      active: false,
+      session: { ...previous.session, completedAt: new Date().toISOString() },
+    }
     current.current = updated
     setState(updated)
   }

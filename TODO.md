@@ -473,41 +473,41 @@ src/types/
 ## Phase 8: Session Summary
 ### 32. Detect Session Completion
 
-- [ ] Compare attempted questions with the selected session length.
+- [x] Compare attempted questions with the selected session length.
 
-- [ ] Stop generating questions when the session is complete.
+- [x] Stop generating questions when the session is complete.
 
-- [ ] Save the completion timestamp.
+- [x] Save the completion timestamp.
 
-- [ ] Navigate to the summary page.
+- [x] Navigate to the summary page.
 
 ### 33. Create the Session Summary Page
 
-- [ ] Display total questions attempted.
+- [x] Display total questions attempted.
 
-- [ ] Display correct answers.
+- [x] Display correct answers.
 
-- [ ] Display incorrect answers.
+- [x] Display incorrect answers.
 
-- [ ] Calculate and display accuracy.
+- [x] Calculate and display accuracy.
 
-- [ ] Display practiced operations.
+- [x] Display practiced operations.
 
-- [ ] Display the difficulty level.
+- [x] Display the difficulty level.
 
-- [ ] Display mistake-review question count.
+- [x] Display mistake-review question count.
 
 ### 34. Add Summary Actions
 
-- [ ] Add a Practice Again button.
+- [x] Add a Practice Again button.
 
-- [ ] Add a Practice Mistakes button.
+- [x] Add a Practice Mistakes button.
 
-- [ ] Add a Change Settings button.
+- [x] Add a Change Settings button.
 
-- [ ] Add a View Statistics button.
+- [x] Add a View Statistics button.
 
-- [ ] Add a Return Home button.
+- [x] Add a Return Home button.
 
 ## Phase 9: Local Data Storage
 ### 35. Create the Storage Service

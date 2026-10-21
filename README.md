@@ -64,6 +64,14 @@ Session generation, statistics, persistence, and automatic advancement remain la
 
 Start from `/practice/setup`. A valid configuration starts generated cards with live attempted, correct, and incorrect counts. Self-reported results are stored once in memory with the selected answer and question/session details. Choosing an answer or flipping does not record an attempt. Each recorded result advances to a different fact with cleared card state.
 
-Fixed sessions show accessible progress and stop at the selected count, displaying a brief finished message. Continuous practice has no fixed progress bar; End Session asks for confirmation and then shows an inline summary with the counts. Direct session URLs without valid setup redirect to setup. The sample-card preview is still available at `/practice/card-preview`.
+Fixed sessions show accessible progress and stop at the selected count, then navigating to the session summary. Continuous practice has no fixed progress bar; End Session asks for confirmation and then opens the session summary. Direct session URLs without valid setup redirect to setup. The sample-card preview is still available at `/practice/card-preview`.
 
-Attempts are not persisted yet. The dedicated fixed-session summary page, summary actions, and completion timestamps remain Phase 8 work; storage is Phase 9. The optional between-question transition is not implemented.
+Attempts are not persisted yet. Completed sessions now include a timestamp and a dedicated summary page (Phase 8); storage remains Phase 9. The optional between-question transition is not implemented.
+
+## Session summary (Phase 8)
+
+Completed fixed-length sessions and confirmed continuous-session endings navigate to `/practice/summary`. The page shows attempted, correct, incorrect, accuracy (rounded to a whole percent, or 0% for no attempts), operations, difficulty, mistake-review count, and completion time. Current regular sessions have zero mistake-review attempts.
+
+Practice Again starts a fresh session with the same configuration. Change Settings opens practice setup; View Statistics and Return Home open their existing routes. Practice Mistakes is disabled with an explanation until mistake review is implemented. Opening the summary without completed-session data displays a friendly empty state.
+
+Summary data and completion timestamps stay in memory and browser navigation state; no localStorage service or persistence was added.
