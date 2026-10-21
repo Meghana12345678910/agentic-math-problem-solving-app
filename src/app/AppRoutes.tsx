@@ -1,4 +1,5 @@
 import { Route, Routes } from 'react-router-dom'
+import CardPreviewPage from '../pages/CardPreviewPage'
 import HomePage from '../pages/HomePage'
 import PracticeSetupPage from '../pages/PracticeSetupPage'
 import PracticePage from '../pages/PracticePage'
@@ -10,6 +11,7 @@ import NotFoundPage from '../pages/NotFoundPage'
 function AppRoutes() {
   return (
     <Routes>
+      <Route path="/practice/card-preview" element={<CardPreviewPage />} />
       <Route path="/" element={<HomePage />} />
       <Route path="/practice/setup" element={<PracticeSetupPage />} />
       <Route path="/practice/session" element={<PracticePage />} />

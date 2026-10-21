@@ -51,3 +51,11 @@ The generators in `src/services/questionGenerator.ts` return complete questions.
 The specification leaves Beginner/Easy quotient limits and the Advanced dividend cap open; the table records the implementation choices. Subtraction operands are ordered to prevent negatives. Division chooses an integer quotient first, then multiplies it by a nonzero divisor. A cap may not be exactly reachable with every divisor.
 
 Each question has four shuffled, distinct nonnegative integer choices, including exactly one correct answer. Phase 5 uses operation-specific distractors through src/services/answerChoices.ts: carry and borrow mistakes, neighboring multiplication facts, and division fact-family factors. Candidates must stay within 20% of the correct answer (at least 3 for small answers), remain nonnegative whole numbers, and differ from the answer. After at most 12 candidate attempts, nearby alternatives fill any gaps. Fisher-Yates shuffling varies the correct answer position. Generation validates the result, retries unexpected failures up to three times, and throws a descriptive error if it cannot return a valid question.
+
+## Question card (Phase 6)
+
+Open `/practice/card-preview`, or follow **Try a sample card** from the practice page. The fixed sample demonstrates answer selection, card flipping, and one-time self-assessment without saving data or advancing a session. Existing practice configuration behavior is preserved.
+
+`QuestionCard` accepts a question, question number, total question count (or `continuous`), and an optional result callback. Changing the question ID resets selection, flip state, and the result lock. The card-local animation checkbox disables transitions; the system reduced-motion preference also disables them. Number keys 1-4 select answers while focus is inside the card; native buttons support Enter and Space. Inactive faces are hidden from assistive technology and made inert, and revealing the answer moves focus to its heading.
+
+Session generation, statistics, persistence, and automatic advancement remain later work.

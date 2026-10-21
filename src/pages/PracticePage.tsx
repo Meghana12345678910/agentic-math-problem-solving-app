@@ -30,6 +30,9 @@ function PracticePage() {
       ) : (
         <p>Choose your practice options to get ready.</p>
       )}
+      <p>
+        <Link to="/practice/card-preview">Try a sample card</Link>
+      </p>
       <Link className="button button-secondary" to="/practice/setup">
         Change practice options
       </Link>
