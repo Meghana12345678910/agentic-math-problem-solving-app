@@ -1,3 +1,5 @@
+import type { MistakePattern } from '../types/mistake'
+import { mistakePatternKey, updateMistakePatterns } from './mistakeService'
 import { calculateStatistics } from './statisticsService'
 import type { AppSettings } from '../types/settings'
 import type { PracticeAttempt, PracticeSession } from '../types/session'
@@ -98,6 +100,38 @@ export function isAttempt(value: unknown): value is PracticeAttempt {
   return answer === value.correctAnswer
 }
 
+export function isMistakePattern(value: unknown): value is MistakePattern {
+  if (
+    !record(value) ||
+    !id(value.id) ||
+    !operation(value.operation) ||
+    !difficulty(value.difficulty) ||
+    ![
+      value.firstOperand,
+      value.secondOperand,
+      value.correctAnswer,
+      value.similarCorrectCount,
+    ].every(integer) ||
+    !integer(value.incorrectCount) ||
+    value.incorrectCount < 1 ||
+    !date(value.lastIncorrectAt) ||
+    typeof value.mastered !== 'boolean'
+  )
+    return false
+  const first = value.firstOperand as number
+  const second = value.secondOperand as number
+  const answer =
+    value.operation === 'addition'
+      ? first + second
+      : value.operation === 'subtraction'
+        ? first - second
+        : value.operation === 'multiplication'
+          ? first * second
+          : second === 0
+            ? NaN
+            : first / second
+  return answer === value.correctAnswer
+}
 /** Inject the browser storage accessor so blocked storage can be tested. */
 export function createStorageService(
   getStorage: () => Storage = () => window.localStorage,
@@ -216,6 +250,49 @@ export function createStorageService(
   function loadAttempts() {
     return read('attempts', attemptList, [])
   }
+  function loadMistakePatterns(): MistakePattern[] {
+    const records = read(
+      'mistakePatterns',
+      (value: unknown): value is unknown[] => Array.isArray(value),
+      [],
+    )
+    const unique = new Map<string, MistakePattern>()
+    for (const value of records) {
+      if (!isMistakePattern(value)) {
+        warn()
+        continue
+      }
+      const key = mistakePatternKey(value)
+      const existing = unique.get(key)
+      if (!existing) unique.set(key, value)
+      else {
+        const latest =
+          Date.parse(value.lastIncorrectAt) >
+          Date.parse(existing.lastIncorrectAt)
+            ? value
+            : existing
+        unique.set(key, {
+          ...latest,
+          id: existing.id,
+          incorrectCount: Math.max(
+            existing.incorrectCount,
+            value.incorrectCount,
+          ),
+        })
+        warn()
+      }
+    }
+    return [...unique.values()]
+  }
+  function saveMistakePatterns(patterns: MistakePattern[]) {
+    if (
+      !patterns.every(isMistakePattern) ||
+      new Set(patterns.map(mistakePatternKey)).size !== patterns.length
+    ) {
+      throw new Error('Invalid or duplicate mistake patterns')
+    }
+    return write('mistakePatterns', patterns)
+  }
   function saveAttempt(attempt: PracticeAttempt) {
     if (!isAttempt(attempt)) throw new Error('Invalid attempt')
     const attempts = loadAttempts()
@@ -228,7 +305,14 @@ export function createStorageService(
       )
     )
       return true
-    return write('attempts', [...attempts, attempt])
+    const saved = write('attempts', [...attempts, attempt])
+    if (!attempt.selfReportedCorrect) {
+      const patternsSaved = saveMistakePatterns(
+        updateMistakePatterns(loadMistakePatterns(), attempt),
+      )
+      return saved && patternsSaved
+    }
+    return saved
   }
   function clearAllData() {
     if (!initialized) initialize()
@@ -269,6 +353,8 @@ export function createStorageService(
     clearAllData,
     resetStatistics,
     initialize,
+    loadMistakePatterns,
+    saveMistakePatterns,
     loadSettings,
     saveSettings,
     loadSessions,

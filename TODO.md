@@ -717,43 +717,43 @@ src/types/
 ## Phase 12: Mistake Tracking
 ### 51. Create Mistake Patterns
 
-- [ ] Create a mistake pattern after an incorrect answer.
+- [x] Create a mistake pattern after an incorrect answer.
 
-- [ ] Store the operation.
+- [x] Store the operation.
 
-- [ ] Store both operands.
+- [x] Store both operands.
 
-- [ ] Store the correct answer.
+- [x] Store the correct answer.
 
-- [ ] Store the difficulty level.
+- [x] Store the difficulty level.
 
-- [ ] Store the last incorrect date.
+- [x] Store the last incorrect date.
 
-- [ ] Initialize the incorrect count.
+- [x] Initialize the incorrect count.
 
-- [ ] Initialize the similar-correct count.
+- [x] Initialize the similar-correct count.
 
 ### 52. Update Existing Mistake Patterns
 
-- [ ] Detect when the same pattern already exists.
+- [x] Detect when the same pattern already exists.
 
-- [ ] Increment its incorrect count.
+- [x] Increment its incorrect count.
 
-- [ ] Update its last-incorrect timestamp.
+- [x] Update its last-incorrect timestamp.
 
-- [ ] Reset or reduce mastery progress when appropriate.
+- [x] Reset or reduce mastery progress when appropriate.
 
-- [ ] Avoid creating duplicate pattern records.
+- [x] Avoid creating duplicate pattern records.
 
 ### 53. Store Mistake Patterns Locally
 
-- [ ] Save mistake patterns to local storage.
+- [x] Save mistake patterns to local storage.
 
-- [ ] Load mistake patterns at application startup.
+- [x] Load mistake patterns at application startup.
 
-- [ ] Validate stored mistake-pattern data.
+- [x] Validate stored mistake-pattern data.
 
-- [ ] Recover gracefully from invalid records.
+- [x] Recover gracefully from invalid records.
 
 ## Phase 13: Similar Question Generation
 ### 54. Generate Nearby-Number Questions

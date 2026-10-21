@@ -99,3 +99,11 @@ The Settings page exposes sound effects, card animation, explanations, and defau
 Card self-assessment plays a short tone only when sound is enabled and supported by the browser. Explanations describe the arithmetic on the revealed card when enabled. Card animation continues to respect reduced motion and the existing card-local toggle.
 
 Clear All Application Data requires explicit confirmation with a permanent-deletion warning. It clears settings, attempts, sessions, mistake patterns, and aggregate statistics, restores defaults, and returns Home. The schema marker is initialized to version 1; unrelated browser keys are preserved. If deletion fails, the page reports the failure and stays on Settings so it can be retried. This adds no mistake-tracking behavior.
+
+## Mistake tracking (Phase 12)
+
+A self-reported wrong answer creates or updates `mathPractice.mistakePatterns` when the completed attempt is saved. Patterns are identified by operation, ordered operands, and difficulty. A repeat retains its pattern ID, increments incorrectCount, updates lastIncorrectAt, resets similarCorrectCount to zero, and sets mastered to false. A self-reported correct answer neither creates a pattern nor increments review progress. Duplicate attempt records do not count twice.
+
+Patterns load and validate at startup. Invalid records are skipped while valid records are retained; duplicate stored facts are consolidated using the latest record and highest existing miss count. Malformed storage safely falls back without deleting unrelated data, and storage failure uses the existing warning and in-memory fallback. Reset Statistics preserves patterns; Clear All Application Data removes them.
+
+There is no new mistake UI in this phase. Inspect the localStorage key in DevTools for manual verification. Similar-question generation, review sessions, review success tracking, and mastery transitions remain later work.

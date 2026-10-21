@@ -10,6 +10,7 @@ function App() {
   useEffect(() => {
     storageService.initialize()
     storageService.loadSettings()
+    storageService.loadMistakePatterns()
   }, [])
   return (
     <>
