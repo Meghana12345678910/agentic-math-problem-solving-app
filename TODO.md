@@ -69,52 +69,52 @@ src/types/
 ### 4. Create the Shared Page Layout
 
 ```
-- [ ] Create a reusable page container.
+- [x] Create a reusable page container.
 
-- [ ] Create the application header.
+- [x] Create the application header.
 
-- [ ] Add the application title.
+- [x] Add the application title.
 
-- [ ] Create a basic navigation component.
+- [x] Create a basic navigation component.
 
-- [ ] Add responsive page spacing.
+- [x] Add responsive page spacing.
 
-- [ ] Add child-friendly font sizes.
+- [x] Add child-friendly font sizes.
 
-- [ ] Add a consistent button style.
+- [x] Add a consistent button style.
 
 ### 5. Create the Home Page
 
-- [ ] Add a welcome message.
+- [x] Add a welcome message.
 
-- [ ] Add a Start Practice button.
+- [x] Add a Start Practice button.
 
-- [ ] Add a View Statistics button.
+- [x] Add a View Statistics button.
 
-- [ ] Add a Settings button.
+- [x] Add a Settings button.
 
-- [ ] Make all buttons keyboard accessible.
+- [x] Make all buttons keyboard accessible.
 
-- [ ] Add responsive styling for small screens.
+- [x] Add responsive styling for small screens.
 
 ### 6. Add Application Routing
 
-- [ ] Install React Router.
+- [x] Install React Router.
 
-- [ ] Create the application routes.
+- [x] Create the application routes.
 
-- [ ] Connect the home-page buttons to their routes.
+- [x] Connect the home-page buttons to their routes.
 
-- [ ] Add a fallback page for unknown routes.
+- [x] Add a fallback page for unknown routes.
 
 **Initial routes:**
 
-- [ ] /
-- [ ] /practice/setup
-- [ ] /practice/session
-- [ ] /practice/summary
-- [ ] /statistics
-- [ ] /settings
+- [x] /
+- [x] /practice/setup
+- [x] /practice/session
+- [x] /practice/summary
+- [x] /statistics
+- [x] /settings
 ## Phase 3: Practice Configuration
 ### 7. Create the Operation Selector
 

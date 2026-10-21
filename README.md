@@ -1,4 +1,4 @@
-﻿# Math Practice
+# Math Practice
 
 A Vite React TypeScript app for arithmetic practice. Phase 1 provides the project structure, shared types, and development tools.
 
@@ -35,4 +35,4 @@ Use `npm run format` to format project files and `npm run test` for tests in wat
 - `src/utils`: future utilities
 - `src/test`: test environment setup
 
-Only the Phase 1 placeholder is implemented. Routing and the functional interface belong to later phases.
+Phase 2 adds the shared layout, home page, and browser routing. Practice setup, session, summary, statistics, and settings routes currently show placeholders; their features belong to later phases.

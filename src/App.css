@@ -1,5 +1,129 @@
-﻿main {
-  max-width: 48rem;
+.site-header {
+  background: #fff;
+  border-bottom: 2px solid #dbe4f4;
+}
+.header-content,
+.page-container {
+  max-width: 64rem;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1.25rem clamp(1rem, 4vw, 2rem);
+}
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.site-title {
+  font-weight: 800;
+  font-size: 1.4rem;
+  text-decoration: none;
+}
+nav {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+}
+nav a:hover {
+  background: #edf2ff;
+  text-decoration: underline;
+}
+nav a[aria-current='page'] {
+  background: #e4edff;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+nav a:active {
+  background: #d3e0ff;
+}
+.page-container {
+  padding-top: clamp(2rem, 6vw, 4rem);
+  overflow-wrap: anywhere;
+}
+.welcome-panel {
+  background: #fff;
+  border: 2px solid #dbe4f4;
+  border-radius: 1.5rem;
+  padding: clamp(1.25rem, 5vw, 3rem);
+}
+.eyebrow {
+  color: #415879;
+  font-weight: 700;
+}
+.home-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0.75rem 1.25rem;
+  border: 2px solid #234ca4;
+  border-radius: 0.75rem;
+  background: #234ca4;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+}
+.button:hover {
+  background: #193b85;
+  border-color: #193b85;
+  text-decoration: underline;
+}
+.button:active {
+  background: #112b65;
+}
+.button-secondary {
+  background: #fff;
+  color: #234ca4;
+}
+.button-secondary:hover {
+  background: #e4edff;
+  color: #193b85;
+}
+.button-secondary:active {
+  background: #d3e0ff;
+}
+.skip-link {
+  position: absolute;
+  top: 0.5rem;
+  left: 1rem;
+  transform: translateY(-200%);
+  padding: 0.75rem;
+  background: #fff;
+  z-index: 1;
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+@media (max-width: 36rem) {
+  .header-content {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  nav {
+    width: 100%;
+  }
+  .home-actions {
+    flex-direction: column;
+  }
+  .home-actions .button {
+    width: 100%;
+  }
 }

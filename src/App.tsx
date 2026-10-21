@@ -1,11 +1,19 @@
-﻿import './App.css'
+import Header from './components/layout/Header'
+import PageContainer from './components/layout/PageContainer'
+import AppRoutes from './app/AppRoutes'
+import './App.css'
 
 function App() {
   return (
-    <main>
-      <h1>Math Practice</h1>
-      <p>A place to practice your math skills.</p>
-    </main>
+    <>
+      <a className="skip-link" href="#main-content">
+        Skip to main content
+      </a>
+      <Header />
+      <PageContainer>
+        <AppRoutes />
+      </PageContainer>
+    </>
   )
 }
 
