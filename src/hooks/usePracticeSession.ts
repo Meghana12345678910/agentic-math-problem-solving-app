@@ -1,4 +1,5 @@
-import { useRef, useState } from 'react'
+import { storageService } from '../services/storageService'
+import { useEffect, useRef, useState } from 'react'
 import type { PracticeConfiguration } from '../types/practiceConfiguration'
 import type { PracticeAttempt, PracticeSession } from '../types/session'
 import type { Question } from '../types/question'
@@ -59,6 +60,9 @@ export function usePracticeSession(config: PracticeConfiguration) {
   const [state, setState] = useState(() => createSession(config))
   // Synchronous state protects against duplicate events before React renders.
   const current = useRef(state)
+  useEffect(() => {
+    storageService.saveSession(state.session)
+  }, [state.session])
 
   function recordResult(
     questionId: string,
@@ -88,6 +92,7 @@ export function usePracticeSession(config: PracticeConfiguration) {
       attemptedAt: new Date().toISOString(),
       sessionId: previous.session.id,
     }
+    storageService.saveAttempt(attempt)
     const attempted = previous.session.attempted + 1
     const active =
       config.sessionLength === 'continuous' || attempted < config.sessionLength

@@ -1,9 +1,16 @@
+import { useEffect } from 'react'
+import { storageService } from './services/storageService'
+import StorageWarning from './components/common/StorageWarning'
 import Header from './components/layout/Header'
 import PageContainer from './components/layout/PageContainer'
 import AppRoutes from './app/AppRoutes'
 import './App.css'
 
 function App() {
+  useEffect(() => {
+    storageService.initialize()
+    storageService.loadSettings()
+  }, [])
   return (
     <>
       <a className="skip-link" href="#main-content">
@@ -11,6 +18,7 @@ function App() {
       </a>
       <Header />
       <PageContainer>
+        <StorageWarning />
         <AppRoutes />
       </PageContainer>
     </>

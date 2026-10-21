@@ -1,3 +1,4 @@
+import { storageService } from '../../services/storageService'
 import { useRef, useState } from 'react'
 import type { KeyboardEvent } from 'react'
 import type { Question } from '../../types/question'
@@ -82,7 +83,9 @@ function CardContent({
 }
 
 function QuestionCard(props: QuestionCardProps) {
-  const [animationsEnabled, setAnimationsEnabled] = useState(true)
+  const [animationsEnabled, setAnimationsEnabled] = useState(
+    () => storageService.loadSettings().animationsEnabled,
+  )
   return (
     <section
       className="question-card"
@@ -98,7 +101,13 @@ function QuestionCard(props: QuestionCardProps) {
         <input
           type="checkbox"
           checked={animationsEnabled}
-          onChange={(event) => setAnimationsEnabled(event.target.checked)}
+          onChange={(event) => {
+            setAnimationsEnabled(event.target.checked)
+            storageService.saveSettings({
+              ...storageService.loadSettings(),
+              animationsEnabled: event.target.checked,
+            })
+          }}
         />
         Animate card flip
       </label>
