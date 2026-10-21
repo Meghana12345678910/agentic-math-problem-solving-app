@@ -1,3 +1,4 @@
+import { describeQuestion } from '../../utils/questionText'
 import { useEffect, useRef } from 'react'
 import type { Question } from '../../types/question'
 import AnswerChoice from './AnswerChoice'
@@ -21,12 +22,6 @@ function CardFront({
   useEffect(() => {
     heading.current?.focus()
   }, [])
-  const operationWords = {
-    addition: 'plus',
-    subtraction: 'minus',
-    multiplication: 'times',
-    division: 'divided by',
-  }
   return (
     <div
       className="card-face card-front"
@@ -37,15 +32,16 @@ function CardFront({
         ref={heading}
         tabIndex={-1}
         className="math-problem"
-        aria-label={`${question.firstOperand} ${operationWords[question.operation]} ${question.secondOperand} equals what?`}
+        aria-label={describeQuestion(question)}
       >
         {question.displayText}
       </h3>
       <div className="answer-grid" role="group" aria-label="Answer choices">
-        {question.choices.map((answer) => (
+        {question.choices.map((answer, index) => (
           <AnswerChoice
             key={answer}
             answer={answer}
+            shortcut={index + 1}
             selected={selectedAnswer === answer}
             disabled={isCardFlipped}
             onSelect={() => onSelect(answer)}

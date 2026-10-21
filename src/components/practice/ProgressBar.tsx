@@ -6,7 +6,7 @@ interface ProgressBarProps {
 function ProgressBar({ attempted, total }: ProgressBarProps) {
   return (
     <div>
-      <label htmlFor="session-progress">
+      <label htmlFor="session-progress" aria-live="polite" aria-atomic="true">
         Session progress: {attempted} of {total} completed
       </label>
       <progress

@@ -1,4 +1,5 @@
 interface AnswerChoiceProps {
+  shortcut?: number
   answer: number
   selected: boolean
   disabled: boolean
@@ -6,6 +7,7 @@ interface AnswerChoiceProps {
 }
 
 function AnswerChoice({
+  shortcut,
   answer,
   selected,
   disabled,
@@ -17,6 +19,7 @@ function AnswerChoice({
       className="button button-secondary answer-choice"
       aria-label={`Answer ${answer}`}
       aria-pressed={selected}
+      aria-keyshortcuts={shortcut?.toString()}
       disabled={disabled}
       onClick={onSelect}
     >

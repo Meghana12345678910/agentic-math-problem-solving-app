@@ -1,6 +1,8 @@
+import { useReducedMotion } from '../../hooks/useReducedMotion'
+import { describeQuestion } from '../../utils/questionText'
 import { playFeedbackSound } from '../../utils/sound'
 import { storageService } from '../../services/storageService'
-import { useRef, useState } from 'react'
+import { useId, useRef, useState } from 'react'
 import type { KeyboardEvent } from 'react'
 import type { Question } from '../../types/question'
 import CardFront from './CardFront'
@@ -36,7 +38,10 @@ function CardContent({
   function selectByKeyboard(event: KeyboardEvent<HTMLDivElement>) {
     const target = event.target as HTMLElement
     if (
-      target.closest('input, select, textarea, [contenteditable="true"]') ||
+      target.closest(
+        'input, select, textarea, [role="textbox"], [contenteditable]:not([contenteditable="false"])',
+      ) ||
+      event.nativeEvent.isComposing ||
       event.altKey ||
       event.ctrlKey ||
       event.metaKey ||
@@ -85,6 +90,8 @@ function CardContent({
 }
 
 function QuestionCard(props: QuestionCardProps) {
+  const reducedMotion = useReducedMotion()
+  const motionNoteId = useId()
   const [animationsEnabled, setAnimationsEnabled] = useState(
     () => storageService.loadSettings().animationsEnabled,
   )
@@ -92,17 +99,21 @@ function QuestionCard(props: QuestionCardProps) {
     <section
       className="question-card"
       aria-label="Math question card"
-      data-animations={animationsEnabled}
+      data-animations={animationsEnabled && !reducedMotion}
     >
-      <p>
+      <p aria-live="polite" aria-atomic="true">
         {props.totalQuestions === 'continuous'
           ? `Question ${props.questionNumber} · Continuous practice`
           : `Question ${props.questionNumber} of ${props.totalQuestions}`}
+      </p>
+      <p className="sr-only" aria-live="polite" aria-atomic="true">
+        {describeQuestion(props.question)}
       </p>
       <label className="animation-setting">
         <input
           type="checkbox"
           checked={animationsEnabled}
+          aria-describedby={reducedMotion ? motionNoteId : undefined}
           onChange={(event) => {
             setAnimationsEnabled(event.target.checked)
             storageService.saveSettings({
@@ -113,6 +124,11 @@ function QuestionCard(props: QuestionCardProps) {
         />
         Animate card flip
       </label>
+      {reducedMotion && (
+        <p id={motionNoteId}>
+          Card animation is off because your device requests reduced motion.
+        </p>
+      )}
       {/* A different question ID resets selection, flip state, and the result lock. */}
       <CardContent
         key={props.question.id}

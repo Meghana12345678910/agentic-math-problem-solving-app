@@ -901,47 +901,47 @@ src/types/
 ## Phase 16: Accessibility
 ### 66. Improve Keyboard Navigation
 
-- [ ] Ensure every control is reachable with Tab.
+- [x] Ensure every control is reachable with Tab.
 
-- [ ] Add visible focus indicators.
+- [x] Add visible focus indicators.
 
-- [ ] Support Enter and Space on buttons.
+- [x] Support Enter and Space on buttons.
 
-- [ ] Support number keys 1–4 for answer selection.
+- [x] Support number keys 1–4 for answer selection.
 
-- [ ] Prevent keyboard shortcuts from interfering with form inputs.
+- [x] Prevent keyboard shortcuts from interfering with form inputs.
 
 ### 67. Improve Screen-Reader Support
 
-- [ ] Use semantic HTML.
+- [x] Use semantic HTML.
 
-- [ ] Add accessible labels to answer choices.
+- [x] Add accessible labels to answer choices.
 
-- [ ] Announce question changes.
+- [x] Announce question changes.
 
-- [ ] Announce the revealed correct answer.
+- [x] Announce the revealed correct answer.
 
-- [ ] Announce session progress.
+- [x] Announce session progress.
 
-- [ ] Add accessible names to icon buttons.
+- [x] Add accessible names to icon buttons.
 
 ### 68. Support Reduced Motion
 
-- [ ] Detect prefers-reduced-motion.
+- [x] Detect prefers-reduced-motion.
 
-- [ ] Disable card animations when reduced motion is requested.
+- [x] Disable card animations when reduced motion is requested.
 
-- [ ] Ensure card content still changes clearly.
+- [x] Ensure card content still changes clearly.
 
-- [ ] Respect the application's animation setting.
+- [x] Respect the application's animation setting.
 
 ### 69. Check Visual Accessibility
 
-- [ ] Verify sufficient color contrast.
+- [x] Verify sufficient color contrast.
 
-- [ ] Avoid communicating results by color alone.
+- [x] Avoid communicating results by color alone.
 
-- [ ] Add text or icons to selected states.
+- [x] Add text or icons to selected states.
 
 - [ ] Test at 200% browser zoom.
 

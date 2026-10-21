@@ -133,3 +133,13 @@ The Statistics page now shows active and mastered pattern counts, total similar 
 Frequently missed facts combine the same operation and ordered operands across difficulty levels and sort by total miss count. All facts are retained in the ranking, including ties. Active pattern details sort by miss count descending, then latest miss date and ID for deterministic ties; they display the fact, difficulty, miss count, current mastery progress, status, and last miss date. A separate expandable Mastered patterns section shows mastered details.
 
 Reset Statistics still preserves mistake patterns and settings: review-attempt totals reset to zero while pattern counts, miss rankings, and mastery remain. Clear All Application Data removes both. Empty states are provided when no patterns or no active/mastered patterns exist. No Phase 16 work is included.
+
+## Accessibility (Phase 16)
+
+Visible focus now applies to every focusable element, including form fields and programmatically focused headings. Route navigation focuses the new page heading while leaving question-card focus management intact. Native buttons support Enter and Space, radio groups retain their standard arrow-key behavior, and answer buttons advertise number shortcuts 1-4. Shortcuts are scoped to the card and ignore form controls, editable regions, modified keys, and text composition.
+
+Question text uses spoken operation names. Question changes, question counts, revealed answers, and session progress have polite announcements. Hidden card faces remain inert and unavailable to assistive technology. Selected choices include text and pressed-state semantics, navigation uses an underline/current-page indicator, and result messages are textual; feedback does not rely on color alone. Existing controls are text-labeled, with no unnamed icon-only buttons.
+
+The card responds to prefers-reduced-motion changes at runtime. Reduced motion overrides animation without changing the saved preference; disabling the app animation setting also remains effective. The existing CSS media-query fallback is retained. Root font sizing now respects the user's default font size, and form fields inherit it.
+
+The new accessibility suite checks keyboard behavior, accessible names, live-region semantics, motion changes, and contrast from actual CSS palette values: tested normal text pairs meet 4.5:1 and the focus ring meets 3:1 against tested surfaces. These checks are not a full accessibility certification. Actual screen-reader output, 200% browser zoom, and larger system-font rendering still need manual review. The two zoom/font checklist items remain unchecked until verified. No Phase 17 design or polish work was added.
