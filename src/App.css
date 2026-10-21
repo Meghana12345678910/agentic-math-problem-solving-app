@@ -127,3 +127,67 @@ nav a:active {
     width: 100%;
   }
 }
+.practice-setup {
+  display: grid;
+  gap: 1.25rem;
+  max-width: 46rem;
+}
+.practice-setup fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 1rem;
+  border: 2px solid #c4d2e8;
+  border-radius: 0.75rem;
+}
+.practice-setup legend {
+  font-weight: 700;
+  padding: 0 0.4rem;
+}
+.selector-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+.selector-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  min-height: 48px;
+  border: 2px solid #c4d2e8;
+  border-radius: 0.5rem;
+  background: #fff;
+  cursor: pointer;
+}
+.selector-option:has(input:checked) {
+  border-color: #234ca4;
+  background: #e4edff;
+}
+.selector-option:focus-within {
+  outline: 3px solid #713c00;
+  outline-offset: 3px;
+}
+.selector-option input {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  accent-color: #234ca4;
+}
+.option-description {
+  display: block;
+  font-size: 0.9rem;
+}
+.button:disabled {
+  background: #e2e7ef;
+  border-color: #68768a;
+  color: #46536a;
+  cursor: not-allowed;
+  text-decoration: none;
+}
+dt {
+  font-weight: 700;
+}
+dd {
+  margin: 0 0 1rem;
+}
