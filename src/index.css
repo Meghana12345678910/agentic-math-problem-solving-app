@@ -1,0 +1,14 @@
+﻿:root {
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+  color: #243247;
+  background: #f8fafc;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
