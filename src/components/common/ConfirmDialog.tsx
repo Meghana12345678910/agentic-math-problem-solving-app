@@ -2,11 +2,22 @@ import { useEffect, useId, useRef } from 'react'
 import type { KeyboardEvent } from 'react'
 
 interface ConfirmDialogProps {
+  title?: string
+  description?: string
+  detail?: string
+  confirmLabel?: string
   onConfirm: () => void
   onCancel: () => void
 }
 
-function ConfirmDialog({ onConfirm, onCancel }: ConfirmDialogProps) {
+function ConfirmDialog({
+  onConfirm,
+  onCancel,
+  title = 'Reset statistics?',
+  description = 'Are you sure you want to erase all practice history and statistics?',
+  detail = 'Your settings will stay the same.',
+  confirmLabel = 'Yes, reset statistics',
+}: ConfirmDialogProps) {
   const titleId = useId()
   const descriptionId = useId()
   const cancel = useRef<HTMLButtonElement>(null)
@@ -39,11 +50,9 @@ function ConfirmDialog({ onConfirm, onCancel }: ConfirmDialogProps) {
         aria-describedby={descriptionId}
         onKeyDown={handleKey}
       >
-        <h2 id={titleId}>Reset statistics?</h2>
-        <p id={descriptionId}>
-          Are you sure you want to erase all practice history and statistics?
-        </p>
-        <p>Your settings will stay the same.</p>
+        <h2 id={titleId}>{title}</h2>
+        <p id={descriptionId}>{description}</p>
+        <p>{detail}</p>
         <div className="home-actions">
           <button
             ref={cancel}
@@ -59,7 +68,7 @@ function ConfirmDialog({ onConfirm, onCancel }: ConfirmDialogProps) {
             className="button"
             onClick={onConfirm}
           >
-            Yes, reset statistics
+            {confirmLabel}
           </button>
         </div>
       </div>

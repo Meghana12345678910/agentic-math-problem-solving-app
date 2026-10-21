@@ -1,3 +1,5 @@
+import { storageService } from '../../services/storageService'
+import { explainQuestion } from '../../utils/explanation'
 import { useEffect, useRef } from 'react'
 import type { Question } from '../../types/question'
 
@@ -35,6 +37,9 @@ function CardBack({
       </p>
       <p>Correct answer: {question.correctAnswer}</p>
       <p>Your answer: {selectedAnswer}</p>
+      {storageService.loadSettings().showExplanations && (
+        <p>{explainQuestion(question)}</p>
+      )}
       <div className="card-result-actions">
         <button
           type="button"

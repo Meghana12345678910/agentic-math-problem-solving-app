@@ -91,3 +91,11 @@ Open `/statistics` to view totals derived from saved self-reported attempts. Ove
 Reset Statistics opens a confirmation dialog. Cancel or Escape preserves history; confirming clears attempts, sessions, and aggregate statistics and refreshes the page totals immediately. Settings, mistake patterns, schema version, and unrelated localStorage keys are preserved. If the reset cannot be persisted, the page states that it was only applied locally; saved history may reappear after reload. Statistics are derived from attempts instead of maintaining a separate aggregate cache.
 
 The Settings page and its additional controls remain Phase 11 work. Advanced mistake statistics remain later work.
+
+## Settings (Phase 11)
+
+The Settings page exposes sound effects, card animation, explanations, and default operations, difficulty, and session length. Save Settings explicitly saves the draft to localStorage; leaving without saving discards it. Practice setup loads the saved defaults, while changes there affect only that session. The initial defaults are no operations selected, Beginner difficulty, and 10 questions.
+
+Card self-assessment plays a short tone only when sound is enabled and supported by the browser. Explanations describe the arithmetic on the revealed card when enabled. Card animation continues to respect reduced motion and the existing card-local toggle.
+
+Clear All Application Data requires explicit confirmation with a permanent-deletion warning. It clears settings, attempts, sessions, mistake patterns, and aggregate statistics, restores defaults, and returns Home. The schema marker is initialized to version 1; unrelated browser keys are preserved. If deletion fails, the page reports the failure and stays on Settings so it can be retried. This adds no mistake-tracking behavior.

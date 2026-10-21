@@ -1,3 +1,4 @@
+import { playFeedbackSound } from '../../utils/sound'
 import { storageService } from '../../services/storageService'
 import { useRef, useState } from 'react'
 import type { KeyboardEvent } from 'react'
@@ -28,6 +29,7 @@ function CardContent({
   function reportResult(correct: boolean) {
     if (!isCardFlipped || resultSubmitted.current) return
     resultSubmitted.current = true
+    if (storageService.loadSettings().soundEnabled) playFeedbackSound(correct)
     setResult(correct)
     if (selectedAnswer !== null) onResult?.(correct, selectedAnswer)
   }

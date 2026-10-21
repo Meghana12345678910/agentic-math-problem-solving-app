@@ -20,9 +20,9 @@ describe('Practice configuration', () => {
     expect(screen.getByRole('status')).toHaveTextContent(
       'Choose at least one operation.',
     )
-    expect(screen.getByRole('status')).toHaveTextContent(
-      'Choose a difficulty level.',
-    )
+    expect(
+      screen.getByRole('radio', { name: 'Level 1: Beginner' }),
+    ).toBeChecked()
   })
 
   it('supports every operation independently, multiple choices, and deselection', async () => {
@@ -121,7 +121,7 @@ describe('Practice configuration', () => {
     renderSetup()
     const start = screen.getByRole('button', { name: 'Start Session' })
     await user.click(screen.getByRole('checkbox', { name: 'Addition' }))
-    expect(start).toBeDisabled()
+    expect(start).toBeEnabled()
     await user.click(screen.getByRole('radio', { name: 'Level 2: Easy' }))
     expect(start).toBeEnabled()
     await user.click(screen.getByRole('checkbox', { name: 'Addition' }))

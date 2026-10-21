@@ -1,3 +1,4 @@
+import { storageService } from '../services/storageService'
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -11,9 +12,16 @@ import type {
 } from '../types/practiceConfiguration'
 
 function PracticeSetupPage() {
-  const [operations, setOperations] = useState<MathOperation[]>([])
-  const [difficulty, setDifficulty] = useState<DifficultyLevel | null>(null)
-  const [sessionLength, setSessionLength] = useState<PracticeSessionLength>(10)
+  const [defaults] = useState(() => storageService.loadSettings())
+  const [operations, setOperations] = useState<MathOperation[]>(
+    defaults.defaultOperations,
+  )
+  const [difficulty, setDifficulty] = useState<DifficultyLevel | null>(
+    defaults.defaultDifficulty,
+  )
+  const [sessionLength, setSessionLength] = useState<PracticeSessionLength>(
+    defaults.defaultSessionLength as PracticeSessionLength,
+  )
   const navigate = useNavigate()
   const valid = operations.length > 0 && difficulty !== null
 

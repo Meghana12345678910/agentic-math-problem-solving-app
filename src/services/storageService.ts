@@ -230,6 +230,33 @@ export function createStorageService(
       return true
     return write('attempts', [...attempts, attempt])
   }
+  function clearAllData() {
+    if (!initialized) initialize()
+    // This explicit clear-all action also permits removing newer-version app data.
+    futureVersion = false
+    const clearedValues: Record<string, unknown> = {
+      settings: { ...defaultSettings, defaultOperations: [] },
+      attempts: [],
+      sessions: [],
+      mistakePatterns: [],
+      statistics: calculateStatistics([]),
+    }
+    let saved = true
+    for (const [name, value] of Object.entries(clearedValues)) {
+      const key = prefix + name
+      memory.set(key, value)
+      pending.add(key)
+      try {
+        getStorage().removeItem(key)
+        pending.delete(key)
+      } catch {
+        saved = false
+        warn()
+      }
+    }
+    const versionSaved = write('version', { version: schemaVersion })
+    return saved && versionSaved
+  }
   function resetStatistics() {
     const results = [
       write('attempts', []),
@@ -239,6 +266,7 @@ export function createStorageService(
     return results.every(Boolean)
   }
   return {
+    clearAllData,
     resetStatistics,
     initialize,
     loadSettings,
