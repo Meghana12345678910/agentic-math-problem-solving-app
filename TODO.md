@@ -866,37 +866,37 @@ src/types/
 ## Phase 15: Advanced Statistics
 ### 63. Add Mistake Statistics
 
-- [ ] Display the number of active mistake patterns.
+- [x] Display the number of active mistake patterns.
 
-- [ ] Display the number of mastered patterns.
+- [x] Display the number of mastered patterns.
 
-- [ ] Display the number of similar questions practiced.
+- [x] Display the number of similar questions practiced.
 
-- [ ] Display the number of review questions answered correctly.
+- [x] Display the number of review questions answered correctly.
 
 ### 64. Identify Frequently Missed Areas
 
-- [ ] Identify the most frequently missed operation.
+- [x] Identify the most frequently missed operation.
 
-- [ ] Identify frequently missed number facts.
+- [x] Identify frequently missed number facts.
 
-- [ ] Sort mistake patterns by incorrect count.
+- [x] Sort mistake patterns by incorrect count.
 
-- [ ] Handle ties.
+- [x] Handle ties.
 
-- [ ] Add an empty state when there are no mistakes.
+- [x] Add an empty state when there are no mistakes.
 
 ### 65. Add Mistake Details
 
-- [ ] Display active mistake patterns.
+- [x] Display active mistake patterns.
 
-- [ ] Show incorrect counts.
+- [x] Show incorrect counts.
 
-- [ ] Show mastery progress.
+- [x] Show mastery progress.
 
-- [ ] Show the most recent incorrect date.
+- [x] Show the most recent incorrect date.
 
-- [ ] Allow mastered patterns to be viewed separately.
+- [x] Allow mastered patterns to be viewed separately.
 
 ## Phase 16: Accessibility
 ### 66. Improve Keyboard Navigation

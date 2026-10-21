@@ -125,3 +125,11 @@ Review sessions generate similar questions and preserve the parent pattern ID on
 Correct review self-reports increment the parent's similarCorrectCount. Wrong reports increment the parent's incorrectCount, update its last miss time, and reset successful-review progress; they do not create a separate pattern for the related question. Three correct similar answers mark a pattern mastered by default. The positive-integer threshold can be saved in Settings. Duplicate attempts cannot advance progress twice. Mastered patterns are excluded, and a future regular mistake on that original fact reopens the pattern.
 
 A review session ends at its selected length, on confirmed continuous-session ending, or early when all eligible patterns are mastered. The summary counts review attempts. No advanced mistake statistics or pattern-detail UI from Phase 15 is added.
+
+## Advanced mistake statistics (Phase 15)
+
+The Statistics page now shows active and mastered pattern counts, total similar questions practiced, and correct review attempts. Review totals are computed from saved attempts, not similarCorrectCount, because that mastery-progress counter resets after a miss. Operation rankings sum the miss counts of all stored patterns, including mastered ones. All operations tied for the highest count are displayed.
+
+Frequently missed facts combine the same operation and ordered operands across difficulty levels and sort by total miss count. All facts are retained in the ranking, including ties. Active pattern details sort by miss count descending, then latest miss date and ID for deterministic ties; they display the fact, difficulty, miss count, current mastery progress, status, and last miss date. A separate expandable Mastered patterns section shows mastered details.
+
+Reset Statistics still preserves mistake patterns and settings: review-attempt totals reset to zero while pattern counts, miss rankings, and mastery remain. Clear All Application Data removes both. Empty states are provided when no patterns or no active/mastered patterns exist. No Phase 16 work is included.

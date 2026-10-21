@@ -53,3 +53,22 @@
   max-height: 90vh;
   overflow-y: auto;
 }
+
+.mistake-list {
+  list-style: none;
+  padding: 0;
+}
+.mistake-pattern h4 {
+  font-size: 1.2rem;
+  margin-top: 0;
+}
+.mistake-pattern dl {
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+.mistake-pattern dd {
+  margin-bottom: 0.75rem;
+}
+.frequent-facts {
+  padding-left: 1.5rem;
+}

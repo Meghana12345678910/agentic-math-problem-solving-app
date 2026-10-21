@@ -1,3 +1,4 @@
+import MistakeStatistics from '../components/statistics/MistakeStatistics'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { storageService } from '../services/storageService'
@@ -23,6 +24,8 @@ const levels: { value: DifficultyLevel; label: string }[] = [
 function loadHistory() {
   return {
     attempts: storageService.loadAttempts(),
+    patterns: storageService.loadMistakePatterns(),
+    threshold: storageService.loadSettings().masteryThreshold,
     sessions: storageService.loadSessions(),
   }
 }
@@ -83,6 +86,11 @@ function StatisticsPage() {
         </div>
       </section>
       <RecentSessions sessions={history.sessions} />
+      <MistakeStatistics
+        patterns={history.patterns}
+        attempts={history.attempts}
+        threshold={history.threshold}
+      />
       <button
         type="button"
         className="button button-secondary"
