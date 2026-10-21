@@ -1059,73 +1059,73 @@ src/types/
 ## Phase 20: Testing
 ### 79. Complete Unit Tests
 
-- [ ] Test all arithmetic generators.
+- [x] Test all arithmetic generators.
 
-- [ ] Test difficulty boundaries.
+- [x] Test difficulty boundaries.
 
-- [ ] Test distractor generation.
+- [x] Test distractor generation.
 
-- [ ] Test answer-choice uniqueness.
+- [x] Test answer-choice uniqueness.
 
-- [ ] Test statistics calculations.
+- [x] Test statistics calculations.
 
-- [ ] Test mistake-pattern updates.
+- [x] Test mistake-pattern updates.
 
-- [ ] Test similar-question generation.
+- [x] Test similar-question generation.
 
-- [ ] Test mastery rules.
+- [x] Test mastery rules.
 
-- [ ] Test storage serialization and validation.
+- [x] Test storage serialization and validation.
 
 ### 80. Complete Component Tests
 
-- [ ] Test operation selection.
+- [x] Test operation selection.
 
-- [ ] Test difficulty selection.
+- [x] Test difficulty selection.
 
-- [ ] Test answer selection.
+- [x] Test answer selection.
 
-- [ ] Test card flipping.
+- [x] Test card flipping.
 
-- [ ] Test right and wrong buttons.
+- [x] Test right and wrong buttons.
 
-- [ ] Test progress updates.
+- [x] Test progress updates.
 
-- [ ] Test session completion.
+- [x] Test session completion.
 
-- [ ] Test statistics display.
+- [x] Test statistics display.
 
-- [ ] Test confirmation dialogs.
+- [x] Test confirmation dialogs.
 
 ### 81. Complete Integration Tests
 
-- [ ] Test a full addition session.
+- [x] Test a full addition session.
 
-- [ ] Test a mixed-operation session.
+- [x] Test a mixed-operation session.
 
-- [ ] Test continuous practice.
+- [x] Test continuous practice.
 
-- [ ] Test an incorrect answer creating a mistake pattern.
+- [x] Test an incorrect answer creating a mistake pattern.
 
-- [ ] Test mistake-review generation.
+- [x] Test mistake-review generation.
 
-- [ ] Test mastery completion.
+- [x] Test mastery completion.
 
-- [ ] Test persistence after a browser refresh.
+- [x] Test persistence after a browser refresh.
 
-- [ ] Test resetting statistics.
+- [x] Test resetting statistics.
 
 ### 82. Complete Accessibility Testing
 
-- [ ] Complete a session using only the keyboard.
+- [x] Complete a session using only the keyboard.
 
 - [ ] Test with a screen reader.
 
-- [ ] Test reduced-motion mode.
+- [x] Test reduced-motion mode.
 
 - [ ] Test browser zoom.
 
-- [ ] Run an automated accessibility checker.
+- [x] Run an automated accessibility checker.
 
 - [ ] Manually review reported issues.
 

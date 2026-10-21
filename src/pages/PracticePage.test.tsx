@@ -54,7 +54,7 @@ describe('Phase 7 practice sessions', () => {
     const user = userEvent.setup()
     renderSession()
     expect(screen.getByText('Question 1 of 5')).toBeInTheDocument()
-    const before = screen.getByRole('heading', { level: 3 }).textContent
+    const before = screen.getByRole('heading', { level: 2 }).textContent
     await user.click(screen.getAllByRole('button', { name: /^Answer / })[0])
     await user.click(screen.getByRole('button', { name: 'Flip Card' }))
     expect(
@@ -62,7 +62,7 @@ describe('Phase 7 practice sessions', () => {
     ).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'I Got It Wrong' }))
     expect(screen.getByText('Question 2 of 5')).toBeInTheDocument()
-    expect(screen.getByRole('heading', { level: 3 }).textContent).not.toBe(
+    expect(screen.getByRole('heading', { level: 2 }).textContent).not.toBe(
       before,
     )
     expect(

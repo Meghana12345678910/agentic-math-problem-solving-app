@@ -29,9 +29,9 @@ function CardBack({
       aria-hidden={!isCardFlipped}
       inert={!isCardFlipped}
     >
-      <h3 ref={heading} tabIndex={-1}>
+      <h2 ref={heading} tabIndex={-1}>
         Answer revealed
-      </h3>
+      </h2>
       <p className="math-problem">
         {question.displayText.replace('= ?', `= ${question.correctAnswer}`)}
       </p>

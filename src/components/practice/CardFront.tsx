@@ -28,14 +28,14 @@ function CardFront({
       aria-hidden={isCardFlipped}
       inert={isCardFlipped}
     >
-      <h3
+      <h2
         ref={heading}
         tabIndex={-1}
         className="math-problem"
         aria-label={describeQuestion(question)}
       >
         {question.displayText}
-      </h3>
+      </h2>
       <div className="answer-grid" role="group" aria-label="Answer choices">
         {question.choices.map((answer, index) => (
           <AnswerChoice
