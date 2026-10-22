@@ -43,8 +43,8 @@ For optional browser tests, run `npm run browsers:install`, then `npm run test:e
 
 ## Deployment
 
-Netlify is the selected hosting target. Use build command `npm run build` and publish directory `dist`. If deploying from a repository containing the parent workspace, set the base directory to `math`; otherwise leave it empty. Alternatively, upload the built `dist` folder manually.
+Deployed on Netlify: [Live demo](https://legendary-sfogliatella-a52e1d.netlify.app/). Use build command `npm run build` and publish directory `dist`. If deploying from a repository containing the parent workspace, set the base directory to `math`; otherwise leave it empty. Alternatively, upload the built `dist` folder manually.
 
-`netlify.toml` provides build settings, and `public/_redirects` supplies the React Router fallback so direct links and page refreshes work. No runtime environment variables are required. After deployment, verify direct routes, refresh recovery, saved progress, responsive layouts, and the browser console on the live site. Progress does not transfer between localhost and the deployed origin.
+`netlify.toml` provides build settings, and `public/_redirects` supplies the React Router fallback so direct links and page refreshes work. No runtime environment variables are required. Complete the remaining live-site checks for route refreshes, session recovery, saved progress, responsive layouts, and the browser console. Progress does not transfer between localhost and the deployed origin.
 
-Deployment and some manual release checks remain pending. See [AUDIT.md](AUDIT.md) for current verification status and [RELEASE.md](RELEASE.md) for detailed deployment instructions.
+Deployment is complete; some manual release checks remain pending. See [AUDIT.md](AUDIT.md) for current verification status and [RELEASE.md](RELEASE.md) for detailed deployment instructions.

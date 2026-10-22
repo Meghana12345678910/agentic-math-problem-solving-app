@@ -1209,7 +1209,7 @@ src/types/
 
 - [x] Select a hosting service.
 
-- [ ] Deploy the production build.
+- [x] Deploy the production build. ([Live Netlify site](https://legendary-sfogliatella-a52e1d.netlify.app/))
 
 - [ ] Verify every route.
 

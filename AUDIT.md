@@ -2,7 +2,9 @@
 
 This audit covers all of `specification.md` and `TODO.md`. Implemented means the
 behavior exists with relevant automated coverage, not that every manual release
-check has passed. The project is **not yet fully release-verified or deployed**.
+check has passed. The project is **deployed, but not yet fully release-verified**.
+
+Live site: [Math Practice](https://legendary-sfogliatella-a52e1d.netlify.app/). Direct HTTP requests to all seven documented routes returned 200 with the app shell; interactive live-site checks remain pending.
 Paths below are relative to this project; test filenames without directories are
 under `src` in the corresponding service, page, or component directory.
 
@@ -68,17 +70,17 @@ under `src` in the corresponding service, page, or component directory.
 | Thousands of attempts and compact histories                                  | Implemented at tested size                     | Storage service, memoized statistics components                                               | 5,000 attempts; newest 100 session summaries; aggregate/review totals retained                                                    | Measure realistic long histories on slower hardware; detailed attempt archiving is conditional and remains deferred               |
 | Loading and rendering performance                                            | Partially verified                             | Lazy routes, storage cache, memoized statistics                                               | Performance/lazy-page tests; delayed JS assets and Chromium 4x CPU scenario                                                       | Actual slower devices and representative school/home networks; no hardware performance guarantee is claimed                       |
 | Privacy and no-account operation                                             | Implemented in app code                        | `PrivacyNotice.tsx`, Home/Settings, local services                                            | Privacy tests, off-origin request checks in release flows                                                                         | Review live hosting/network settings; no practice history is uploaded by the app                                                  |
-| React Router direct routes and refresh                                       | Implemented locally; live verification missing | `AppRoutes.tsx`, `public/_redirects`, `netlify.toml`                                          | Local production direct-route/reload tests                                                                                        | Verify every route on the actual Netlify domain                                                                                   |
+| React Router direct routes and refresh                                       | Implemented; live interaction checks pending | `AppRoutes.tsx`, `public/_redirects`, `netlify.toml`                                          | Local production direct-route/reload tests                                                                                        | Verify every route on the actual Netlify domain                                                                                   |
 | Browser compatibility                                                        | Partially verified                             | `playwright.config.ts`, `e2e/*`                                                               | Chromium, Firefox, WebKit and Chromium tablet/mobile projects                                                                     | Actual Safari and Microsoft Edge; WebKit is not Safari certification                                                              |
-| Deployment                                                                   | Missing                                        | `netlify.toml`, `_redirects`, `RELEASE.md`                                                    | Local production build and routing checks                                                                                         | Authenticated Netlify deployment, live persistence/layout/routes/console verification                                             |
+| Deployment | Deployed; live verification partial | `netlify.toml`, `_redirects`, `RELEASE.md` | Live HTTP 200 app-shell responses on all seven routes; local production build | Interactive sessions, refresh persistence, layout and console checks on the live site |
 
 ## Remaining acceptance work
 
 The TODO items for a real browser restart, screen reader, browser zoom, larger
 system fonts, manual accessibility review, slower physical devices, actual
-Safari/Edge, and deployment/live-origin checks must not be checked merely because
-related automation exists. Netlify is selected, but there is no Netlify connector,
-auth token, or site ID available in this workspace.
+Safari/Edge, and interactive live-origin checks must not be checked merely because
+related automation exists. Netlify deployment is complete; server-level route
+responses are verified, while browser interaction checks remain pending.
 
 If both Web Locks and IndexedDB are unavailable/denied, the app retains its
 synchronous usable-session fallback. That environment cannot provide the same
@@ -141,6 +143,6 @@ claimed as actual browser zoom or an OS font-size test.
    readable labels, reachable controls and absence of clipping.
 4. Repeat on actual Safari and Edge, physical tablet portrait/landscape and a
    slower device. Record browser/device and any responsiveness or layout issue.
-5. After authenticated Netlify deployment, open and refresh every documented
+5. On the deployed Netlify site, open and refresh every documented
    route on the live origin. Repeat persistence, responsive and console/network
    checks there. Localhost progress does not automatically transfer to Netlify.

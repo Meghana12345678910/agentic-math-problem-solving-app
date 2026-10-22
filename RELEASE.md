@@ -5,7 +5,7 @@ For the latest targeted-fix verification and remaining requirements, see
 
 ## Current scope
 
-Netlify is the selected hosting service. This workspace prepares the production build and SPA routing; publication and live-domain verification require authenticated Netlify access. No Netlify auth token or site ID was available in this session, and no deployment has been made. Do not treat local preview checks as verification of a deployed site.
+The application is deployed on Netlify: [Live site](https://legendary-sfogliatella-a52e1d.netlify.app/). Direct HTTP requests to all seven documented routes returned status 200 with the React app shell. This confirms live server routing, not interactive behavior or browser refresh recovery. The remaining manual live-site and accessibility checks still need verification.
 
 ## Privacy review
 
@@ -86,7 +86,7 @@ The local production run passed **20 of 20** browser scenarios with no skipped o
 
 The complete run's report is preserved locally in `playwright-report/full-release-report.json`; the latest focused run is in `test-results/release-report.json`. These generated records are ignored by Git. The first concurrent browser run exposed Firefox startup/teardown timeouts; serial execution completed all scenarios successfully without retries. The final sequential Vitest run passed all **293 tests across 29 files**, including the two new privacy-notice tests. Lint, TypeScript checking through the production build, Vite build, and formatting checks passed.
 
-Actual Safari and Edge, physical-device behavior, deployment, and live-site verification remain pending. WebKit passing does not check off Safari. Tablet/mobile checklist items refer specifically to emulation. Earlier-phase manual accessibility and slower-device checks remain unchanged.
+Deployment is complete. Actual Safari and Edge, physical-device behavior, and full interactive live-site verification remain pending. WebKit passing does not check off Safari. Tablet/mobile checklist items refer specifically to emulation. Earlier-phase manual accessibility and slower-device checks remain unchanged.
 
 ## Changed files
 
