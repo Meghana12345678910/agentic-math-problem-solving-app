@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Keep environment secrets out of Git; allow a sanitized example file.
+.env
+.env.*
+!.env.example
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
