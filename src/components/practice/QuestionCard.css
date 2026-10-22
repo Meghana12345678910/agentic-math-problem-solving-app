@@ -117,7 +117,7 @@
 }
 @media (max-width: 30rem) {
   .card-face {
-    padding: 1rem;
+    padding: min(1rem, 4vw);
   }
   .question-card {
     margin: 1.25rem auto;

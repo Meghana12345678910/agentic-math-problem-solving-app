@@ -956,7 +956,7 @@ src/types/
 
 - [x] Keep answer choices easy to reach.
 
-- [ ] Test portrait and landscape orientations.
+- [x] Test portrait and landscape orientations. (Automated 768x1024 and 1024x768 viewport checks; physical-device review remains manual.)
 
 ### 71. Optimize for Mobile Devices
 
@@ -968,7 +968,7 @@ src/types/
 
 - [x] Simplify navigation.
 
-- [ ] Test on common small-screen sizes.
+- [x] Test on common small-screen sizes. (Automated 320px and 375px viewport checks, including enlarged text.)
 
 ### 72. Optimize the Statistics Layout
 
@@ -1167,47 +1167,47 @@ src/types/
 ## Phase 22: Release Preparation
 ### 86. Complete Privacy Review
 
-- [ ] Confirm that no personal information is collected.
+- [x] Confirm that no personal information is collected.
 
-- [ ] Confirm that practice data remains in the browser.
+- [x] Confirm that practice data remains in the browser.
 
-- [ ] Remove unnecessary tracking services.
+- [x] Remove unnecessary tracking services.
 
-- [ ] Avoid child-facing advertisements.
+- [x] Avoid child-facing advertisements.
 
-- [ ] Explain that clearing browser data removes progress.
+- [x] Explain that clearing browser data removes progress.
 
 ### 87. Complete Browser Testing
 
-- [ ] Test in Chrome.
+- [x] Test in Chrome.
 
 - [ ] Test in Safari.
 
-- [ ] Test in Firefox.
+- [x] Test in Firefox.
 
 - [ ] Test in Microsoft Edge.
 
-- [ ] Test on an iPad or tablet emulator.
+- [x] Test on an iPad or tablet emulator.
 
-- [ ] Test on a mobile device or emulator.
+- [x] Test on a mobile device or emulator.
 
 ### 88. Prepare the Production Build
 
-- [ ] Run all tests.
+- [x] Run all tests.
 
-- [ ] Resolve linting errors.
+- [x] Resolve linting errors.
 
-- [ ] Resolve TypeScript errors.
+- [x] Resolve TypeScript errors.
 
-- [ ] Create the production build.
+- [x] Create the production build.
 
-- [ ] Test the production build locally.
+- [x] Test the production build locally.
 
-- [ ] Configure deployment routing for React Router.
+- [x] Configure deployment routing for React Router.
 
 ### 89. Deploy the Application
 
-- [ ] Select a hosting service.
+- [x] Select a hosting service.
 
 - [ ] Deploy the production build.
 

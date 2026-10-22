@@ -1,3 +1,4 @@
+import PrivacyNotice from '../components/common/PrivacyNotice'
 import { Link } from 'react-router-dom'
 
 function HomePage() {
@@ -17,6 +18,7 @@ function HomePage() {
           Settings
         </Link>
       </div>
+      <PrivacyNotice />
     </section>
   )
 }

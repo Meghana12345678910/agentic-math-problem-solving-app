@@ -140,9 +140,7 @@ function MistakeStatistics({
         Mastered patterns ({statistics.masteredPatterns.length})
       </button>
       <div id="mastered-pattern-details" hidden={!showMastered}>
-        <summary>
-          Mastered patterns ({statistics.masteredPatterns.length})
-        </summary>
+        <h3>Mastered patterns ({statistics.masteredPatterns.length})</h3>
         {statistics.masteredPatterns.length ? (
           <PatternList
             patterns={statistics.masteredPatterns}

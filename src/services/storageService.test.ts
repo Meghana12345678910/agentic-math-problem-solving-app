@@ -1,3 +1,4 @@
+import { reportResult } from '../test/reportResult'
 import { act, renderHook } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import {
@@ -159,7 +160,8 @@ describe('Phase 9 storage', () => {
     )
     const initial = result.current
     act(() =>
-      initial.recordResult(
+      reportResult(
+        initial,
         initial.question.id,
         initial.question.choices[0],
         false,

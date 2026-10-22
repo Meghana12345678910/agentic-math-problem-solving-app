@@ -131,6 +131,10 @@ describe('Phase 15 mistake statistics UI', () => {
     })
     expect(screen.getAllByRole('heading', { level: 4 })).toHaveLength(2)
     await user.click(disclosure)
+    expect(
+      screen.getByRole('heading', { name: 'Mastered patterns (1)', level: 3 }),
+    ).toBeVisible()
+    expect(document.querySelector('summary')).toBeNull()
     expect(screen.getAllByRole('heading', { level: 4 })).toHaveLength(3)
     expect(
       screen.getByText('3 of 3 correct similar answers'),

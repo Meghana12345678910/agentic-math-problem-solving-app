@@ -1,3 +1,4 @@
+import { reportResult } from '../test/reportResult'
 import { renderReady as render } from '../test/renderReady'
 import { act, renderHook, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -119,12 +120,14 @@ describe('Phase 14 review outcomes', () => {
       const current = result.current
       expect(current.question.mistakePatternId).toBe(pattern.id)
       act(() => {
-        current.recordResult(
+        reportResult(
+          current,
           current.question.id,
           current.question.choices[0],
           true,
         )
-        current.recordResult(
+        reportResult(
+          current,
           current.question.id,
           current.question.choices[0],
           true,
@@ -151,7 +154,8 @@ describe('Phase 14 review outcomes', () => {
     const { result } = renderHook(() => usePracticeSession(config))
     const current = result.current
     act(() =>
-      current.recordResult(
+      reportResult(
+        current,
         current.question.id,
         current.question.choices[0],
         false,
@@ -173,7 +177,8 @@ describe('Phase 14 review outcomes', () => {
     const { result } = renderHook(() => usePracticeSession(config))
     const current = result.current
     act(() =>
-      current.recordResult(
+      reportResult(
+        current,
         current.question.id,
         current.question.choices[0],
         true,

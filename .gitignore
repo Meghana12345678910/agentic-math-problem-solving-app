@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local browser testing and Netlify connection
+.playwright/
+playwright-report/
+test-results/
+.netlify/

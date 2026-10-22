@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef } from 'react'
 import type { KeyboardEvent } from 'react'
+import './ConfirmDialog.css'
 
 interface ConfirmDialogProps {
   title?: string

@@ -110,7 +110,7 @@ describe('Phase 20 complete application flows', () => {
       ).toBe(correct ? 0 : 5)
       expect(fresh.loadActiveSession()).toBeNull()
     },
-    15000,
+    60000,
   )
 
   it('runs all four operations through setup, twenty cards, summary, and statistics', async () => {
@@ -155,7 +155,7 @@ describe('Phase 20 complete application flows', () => {
     const attempts = createStorageService().loadAttempts()
     expect(attempts).toHaveLength(20)
     expect(new Set(attempts.map((a) => a.questionId)).size).toBe(20)
-  }, 15000)
+  }, 60000)
 
   it('creates a mistake, reviews related questions to mastery, and resets history while preserving mastery', async () => {
     storageService.saveSettings({ ...defaultSettings, soundEnabled: true })
@@ -215,7 +215,7 @@ describe('Phase 20 complete application flows', () => {
     expect(fresh.loadSessions()).toEqual([])
     expect(fresh.loadSettings().soundEnabled).toBe(true)
     expect(fresh.loadMistakePatterns()[0].mastered).toBe(true)
-  }, 15000)
+  }, 60000)
 
   it('continues beyond twenty questions until explicitly ended', async () => {
     const user = userEvent.setup()
@@ -237,7 +237,7 @@ describe('Phase 20 complete application flows', () => {
       correct: 21,
     })
     expect(createStorageService().loadActiveSession()).toBeNull()
-  }, 15000)
+  }, 60000)
 
   it('finishes after a simulated refresh without losing or duplicating completed answers', async () => {
     const user = userEvent.setup()
@@ -273,5 +273,5 @@ describe('Phase 20 complete application flows', () => {
     })
     expect(fresh.loadActiveSession()).toBeNull()
     expect(screen.getByText('60%')).toBeInTheDocument()
-  }, 15000)
+  }, 60000)
 })

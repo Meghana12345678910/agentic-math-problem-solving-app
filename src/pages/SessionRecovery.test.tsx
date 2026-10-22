@@ -238,3 +238,28 @@ describe('Phase 18 navigation safety', () => {
     expect(createStorageService().loadActiveSession()).toBeNull()
   })
 })
+
+it('resumes an operation set in reversed order using the saved configuration consistently', async () => {
+  const mixed = { ...configuration, operations: ['addition', 'division'] }
+  const view = await mount([
+    { pathname: '/practice/session', state: { configuration: mixed } },
+  ])
+  const snapshot = storageService.loadActiveSession()!
+  view.unmount()
+  await mount([
+    {
+      pathname: '/practice/session',
+      state: {
+        configuration: { ...mixed, operations: ['division', 'addition'] },
+      },
+    },
+  ])
+  expect(
+    await screen.findByRole('heading', { name: 'Practice session' }),
+  ).toBeInTheDocument()
+  const restored = storageService.loadActiveSession()!
+  expect(restored.session.id).toBe(snapshot.session.id)
+  expect(restored.question.id).toBe(snapshot.question.id)
+  expect(restored.configuration.operations).toEqual(restored.session.operations)
+  expect(isActiveSessionSnapshot(restored)).toBe(true)
+})

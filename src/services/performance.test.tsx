@@ -1,3 +1,4 @@
+import { reportResult } from '../test/reportResult'
 import { createLargeHistory as makeAttempts } from '../test/largeHistory'
 import { act, renderHook, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -158,7 +159,7 @@ describe('Phase 21 rendering and persistence', () => {
     act(() => result.current.updateCard(selected, true))
     expect(snapshot).toHaveBeenCalledTimes(2)
     expect(generate).not.toHaveBeenCalled()
-    act(() => result.current.recordResult(original.id, selected, true))
+    act(() => reportResult(result.current, original.id, selected, true))
     expect(session).toHaveBeenCalledTimes(1)
     expect(snapshot).toHaveBeenCalledTimes(3)
     expect(generate).toHaveBeenCalled()

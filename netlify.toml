@@ -1,0 +1,6 @@
+# Set Netlify's base directory to math when connecting the parent repository.
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# SPA routing is in public/_redirects and is copied into dist for Git and manual deploys.

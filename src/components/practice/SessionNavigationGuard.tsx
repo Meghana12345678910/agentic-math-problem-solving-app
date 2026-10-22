@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useBlocker } from 'react-router-dom'
 import ConfirmDialog from '../common/ConfirmDialog'
 
@@ -7,9 +7,10 @@ function SessionNavigationGuard({
   onEnd,
 }: {
   active: boolean
-  onEnd: () => void
+  onEnd: () => void | Promise<void>
 }) {
   const blocker = useBlocker(active)
+  const ending = useRef(false)
   useEffect(() => {
     if (!active) return
     const beforeUnload = (event: BeforeUnloadEvent) => {
@@ -28,10 +29,18 @@ function SessionNavigationGuard({
       detail="Completed answers will stay saved."
       confirmLabel="End session and leave"
       cancelLabel="Keep practicing"
-      onCancel={() => blocker.reset()}
-      onConfirm={() => {
-        onEnd()
-        blocker.proceed()
+      onCancel={() => {
+        if (!ending.current) blocker.reset()
+      }}
+      onConfirm={async () => {
+        if (ending.current) return
+        ending.current = true
+        try {
+          await onEnd()
+          blocker.proceed()
+        } finally {
+          ending.current = false
+        }
       }}
     />
   )

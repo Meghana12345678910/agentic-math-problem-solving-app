@@ -1,3 +1,4 @@
+import PrivacyNotice from '../components/common/PrivacyNotice'
 import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -143,6 +144,7 @@ function SettingsPage() {
         </button>
       </form>
       <p role="status">{message}</p>
+      <PrivacyNotice />
       <h2>Clear application data</h2>
       <p>
         This erases your practice history, statistics, mistake patterns, and

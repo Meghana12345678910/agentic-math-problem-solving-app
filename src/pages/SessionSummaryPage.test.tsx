@@ -1,3 +1,4 @@
+import { reportResult } from '../test/reportResult'
 import { renderReady as render } from '../test/renderReady'
 import { act, renderHook, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -141,7 +142,7 @@ describe('Phase 8 summary', () => {
     for (let i = 0; i < 5; i += 1) {
       const state = result.current
       act(() =>
-        state.recordResult(state.question.id, state.question.choices[0], true),
+        reportResult(state, state.question.id, state.question.choices[0], true),
       )
     }
     expect(result.current.active).toBe(false)
@@ -152,7 +153,8 @@ describe('Phase 8 summary', () => {
     const lastQuestion = result.current.question.id
     act(() => result.current.endSession())
     act(() =>
-      result.current.recordResult(
+      reportResult(
+        result.current,
         lastQuestion,
         result.current.question.choices[0],
         false,

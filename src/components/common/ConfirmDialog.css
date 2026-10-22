@@ -1,0 +1,18 @@
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  background: #15243bc9;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  padding: min(1rem, 4vw);
+  overflow-y: auto;
+}
+.confirm-dialog {
+  background: #fff;
+  border-radius: 1rem;
+  padding: min(1.5rem, 4vw);
+  width: min(100%, 32rem);
+  max-height: 90vh;
+  overflow-y: auto;
+}

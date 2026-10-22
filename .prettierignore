@@ -4,3 +4,8 @@ package-lock.json
 specification.md
 TODO.md
 
+
+.playwright
+playwright-report
+test-results
+.netlify

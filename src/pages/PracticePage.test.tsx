@@ -1,3 +1,4 @@
+import { reportResult } from '../test/reportResult'
 import { renderReady as render } from '../test/renderReady'
 import { act, renderHook, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -123,8 +124,8 @@ describe('Phase 7 practice sessions', () => {
       (choice) => choice !== initial.question.correctAnswer,
     )!
     act(() => {
-      initial.recordResult(initial.question.id, selected, true)
-      initial.recordResult(initial.question.id, selected, false)
+      reportResult(initial, initial.question.id, selected, true)
+      reportResult(initial, initial.question.id, selected, false)
     })
     expect(result.current.session.correct).toBe(1)
     expect(result.current.session.attempted).toBe(1)
@@ -145,11 +146,12 @@ describe('Phase 7 practice sessions', () => {
       Number.isNaN(Date.parse(result.current.attempts[0].attemptedAt)),
     ).toBe(false)
     const current = result.current
-    act(() => current.recordResult(current.question.id, -999, true))
+    act(() => reportResult(current, current.question.id, -999, true))
     expect(result.current.attempts).toHaveLength(1)
     act(() => result.current.endSession())
     act(() =>
-      result.current.recordResult(
+      reportResult(
+        result.current,
         result.current.question.id,
         result.current.question.choices[0],
         true,
@@ -171,7 +173,8 @@ describe('Phase 7 practice sessions', () => {
       expect(mixed.operations).toContain(current.question.operation)
       expect(current.question.difficulty).toBe(3)
       act(() =>
-        current.recordResult(
+        reportResult(
+          current,
           current.question.id,
           current.question.choices[0],
           true,

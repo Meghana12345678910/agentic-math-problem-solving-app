@@ -230,7 +230,7 @@ progress {
 @media (max-width: 36rem) {
   .main-navigation {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 7rem), 1fr));
   }
   .main-navigation a {
     justify-content: center;
@@ -238,6 +238,12 @@ progress {
   }
 }
 @media (max-width: 30rem) {
+  /* Keep enlarged text readable instead of spending its width on rem padding. */
+  .header-content,
+  .page-container,
+  .button {
+    padding-inline: min(1rem, 4vw);
+  }
   .session-configuration {
     grid-template-columns: 1fr;
   }

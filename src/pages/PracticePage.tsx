@@ -32,8 +32,7 @@ function ActivePractice({
   const [confirmEnd, setConfirmEnd] = useState(false)
 
   const [leaving, setLeaving] = useState(false)
-  if (leaving) return null
-  if (!active)
+  if (!active && !leaving)
     return (
       <Navigate
         to="/practice/summary"
@@ -55,7 +54,7 @@ function ActivePractice({
         active={active}
         onEnd={() => {
           setLeaving(true)
-          endSession()
+          return endSession()
         }}
       />
       <h1>Practice session</h1>
@@ -159,7 +158,7 @@ function PracticePage() {
           [...saved.configuration.operations].sort().join()))
       ? saved
       : null
-  const configuration = explicit ?? matching?.configuration
+  const configuration = matching?.configuration ?? explicit
   if (!configuration)
     return (
       <Navigate

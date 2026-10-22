@@ -1,5 +1,5 @@
 import type { ActiveSessionSnapshot } from '../types/activeSession'
-import { isValidQuestion } from './questionGenerator'
+import { isValidFact, isValidQuestion } from './questionGenerator'
 import type { MistakePattern } from '../types/mistake'
 import {
   mistakePatternKey,
@@ -107,7 +107,10 @@ export function isAttempt(value: unknown): value is PracticeAttempt {
           : second === 0
             ? NaN
             : first / second
-  return answer === value.correctAnswer
+  return (
+    answer === value.correctAnswer &&
+    isValidFact(value as unknown as PracticeAttempt)
+  )
 }
 
 export function isMistakePattern(value: unknown): value is MistakePattern {
@@ -140,7 +143,10 @@ export function isMistakePattern(value: unknown): value is MistakePattern {
           : second === 0
             ? NaN
             : first / second
-  return answer === value.correctAnswer
+  return (
+    answer === value.correctAnswer &&
+    isValidFact(value as unknown as MistakePattern)
+  )
 }
 export function isActiveSessionSnapshot(
   value: unknown,

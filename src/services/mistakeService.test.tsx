@@ -1,3 +1,4 @@
+import { reportResult } from '../test/reportResult'
 import { renderReady as render } from '../test/renderReady'
 import { act, renderHook, screen } from '@testing-library/react'
 import { TestRouter as MemoryRouter } from '../test/TestRouter'
@@ -230,8 +231,18 @@ describe('Phase 12 mistake tracking', () => {
     )
     const first = result.current
     act(() => {
-      first.recordResult(first.question.id, first.question.correctAnswer, false)
-      first.recordResult(first.question.id, first.question.correctAnswer, false)
+      reportResult(
+        first,
+        first.question.id,
+        first.question.correctAnswer,
+        false,
+      )
+      reportResult(
+        first,
+        first.question.id,
+        first.question.correctAnswer,
+        false,
+      )
     })
     expect(createStorageService().loadMistakePatterns()).toHaveLength(1)
     expect(createStorageService().loadMistakePatterns()[0].incorrectCount).toBe(
